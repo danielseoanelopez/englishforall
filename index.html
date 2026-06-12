@@ -511,14 +511,31 @@ const SOCIAL = {
 })();
 
 // ===== Attempt limit (per browser/device via localStorage) =====
+// Teacher bypass: open the page once with ?profe=rankup to unlock
+// unlimited attempts on that device. ?reset=1 clears the counter.
 const MAX_ATTEMPTS = 3;
+(function handleParams() {
+  try {
+    const p = new URLSearchParams(location.search);
+    if (p.get("profe") === "rankup") localStorage.setItem("efa_teacher", "1");
+    if (p.get("reset") === "1") localStorage.removeItem("efa_attempts");
+  } catch (e) {}
+})();
+function isTeacher() {
+  try { return localStorage.getItem("efa_teacher") === "1"; } catch (e) { return false; }
+}
 function getAttempts() {
   try { return Number(localStorage.getItem("efa_attempts") || 0); } catch (e) { return 0; }
 }
 function addAttempt() {
+  if (isTeacher()) return;
   try { localStorage.setItem("efa_attempts", getAttempts() + 1); } catch (e) {}
 }
 function refreshAttemptUI() {
+  if (isTeacher()) {
+    document.getElementById("attemptInfo").textContent = "MODO PROFE · INTENTOS ∞";
+    return;
+  }
   const used = Math.min(getAttempts(), MAX_ATTEMPTS);
   document.getElementById("attemptInfo").textContent = `INTENTOS: ${used} / ${MAX_ATTEMPTS}`;
   if (used >= MAX_ATTEMPTS) {
@@ -596,7 +613,7 @@ const LEVELS = [
 ];
 
 function startTest() {
-  if (getAttempts() >= MAX_ATTEMPTS) { refreshAttemptUI(); return; }
+  if (!isTeacher() && getAttempts() >= MAX_ATTEMPTS) { refreshAttemptUI(); return; }
   const container = document.getElementById("questions");
   container.innerHTML = QUESTIONS.map((item, i) => `
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
