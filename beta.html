@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English for All &middot; Test de nivel de ingl&eacute;s (CEFR) — BETA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00e5ff;
+    --magenta: #ff3df0;
+    --purple: #9d4dff;
+    --gold: #ffc83d;
+    --bg: #05050e;
+    --panel: rgba(10, 10, 26, 0.92);
+    --text: #eaf7ff;
+    --muted: #7fd9e8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Share Tech Mono", monospace;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, #ffffff88 50%, transparent 51%),
+      radial-gradient(1px 1px at 70% 15%, #ffffff66 50%, transparent 51%),
+      radial-gradient(2px 2px at 85% 60%, #9d4dff55 50%, transparent 51%),
+      radial-gradient(1px 1px at 40% 80%, #00e5ff55 50%, transparent 51%),
+      radial-gradient(1px 1px at 10% 65%, #ffffff55 50%, transparent 51%),
+      radial-gradient(2px 2px at 60% 45%, #ff3df044 50%, transparent 51%),
+      radial-gradient(1px 1px at 92% 88%, #ffffff66 50%, transparent 51%);
+    background-size: 520px 520px;
+    color: var(--text);
+    line-height: 1.6;
+    padding: 24px 14px 64px;
+    font-size: 17px;
+  }
+  .container { max-width: 760px; margin: 0 auto; }
+
+  /* ===== Brand header ===== */
+  .brand {
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+  .brand .mic { font-size: 1.6rem; filter: drop-shadow(0 0 6px var(--cyan)); }
+  .brand .name {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.85rem;
+    color: #fff;
+    text-shadow: 0 0 8px var(--cyan), 0 0 18px var(--cyan);
+  }
+  .brand .name b { color: var(--cyan); }
+  .brand .tag {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  header { text-align: center; margin-bottom: 26px; }
+  header h1 {
+    font-family: "Press Start 2P", monospace;
+    font-size: clamp(1.1rem, 4.5vw, 1.9rem);
+    color: var(--purple);
+    text-shadow: 0 0 10px var(--purple), 0 0 30px #9d4dff88, 0 0 2px #fff;
+    margin: 14px 0 12px;
+    letter-spacing: 2px;
+  }
+  header .sub {
+    color: var(--gold);
+    font-size: 0.95rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px #ffc83d66;
+  }
+  header .sub::before, header .sub::after { content: " ✦ "; color: var(--cyan); }
+
+  /* ===== Neon panels ===== */
+  .card {
+    background: var(--panel);
+    border: 2px solid var(--cyan);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 0 12px #00e5ff44, inset 0 0 18px #00e5ff11;
+  }
+  .card.alt {
+    border-color: var(--magenta);
+    box-shadow: 0 0 12px #ff3df044, inset 0 0 18px #ff3df011;
+  }
+  .panel-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.8rem;
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .es { color: var(--muted); font-size: 0.85rem; }
+
+  .student-info label {
+    display: block;
+    color: var(--cyan);
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 14px 0 6px;
+  }
+  .student-info input {
+    width: 100%;
+    padding: 10px 14px;
+    background: #060614;
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: "Share Tech Mono", monospace;
+    font-size: 1.05rem;
+    box-shadow: inset 0 0 10px #9d4dff22;
+    outline: none;
+  }
+  .student-info input:focus { border-color: var(--cyan); box-shadow: 0 0 10px #00e5ff55; }
+
+  /* ===== Questions ===== */
+  .question h3 {
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .question h3 .qnum {
+    display: inline-block;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.7rem;
+    color: #060614;
+    background: var(--cyan);
+    border-radius: 6px;
+    padding: 4px 7px;
+    margin-right: 10px;
+    box-shadow: 0 0 8px var(--cyan);
+  }
+  .card.alt .question h3 .qnum, .card.alt .qnum { background: var(--magenta); box-shadow: 0 0 8px var(--magenta); }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px dashed #2a4a6a;
+    border-radius: 10px;
+    margin-bottom: 9px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+  .option:hover {
+    border-color: var(--cyan);
+    background: #00e5ff0e;
+    box-shadow: 0 0 10px #00e5ff33;
+  }
+  .option:has(input:checked) {
+    border: 1px solid var(--gold);
+    background: #ffc83d12;
+    box-shadow: 0 0 10px #ffc83d44;
+  }
+  .option input { accent-color: var(--magenta); transform: scale(1.2); }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-block;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.8rem;
+    background: linear-gradient(180deg, var(--magenta), #a31bd6);
+    color: #fff;
+    border: 2px solid #ff8df7;
+    border-radius: 12px;
+    padding: 16px 28px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-shadow: 0 0 6px #000;
+    box-shadow: 0 0 14px #ff3df077;
+    transition: transform 0.1s, box-shadow 0.15s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 0 22px #ff3df0aa; }
+  .btn-row { text-align: center; margin-top: 26px; }
+  .btn-row .es { display: block; margin-top: 10px; }
+
+  /* ===== Progress ===== */
+  .progress-wrap {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    padding: 12px 0 8px;
+    z-index: 10;
+  }
+  .progress-bar {
+    height: 12px;
+    background: #0c0c22;
+    border: 1px solid var(--purple);
+    border-radius: 7px;
+    overflow: hidden;
+    box-shadow: inset 0 0 8px #000;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    box-shadow: 0 0 12px var(--cyan);
+    transition: width 0.25s;
+  }
+  .progress-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 5px;
+    letter-spacing: 2px;
+  }
+
+  /* ===== Results ===== */
+  #results { display: none; text-align: center; border-color: var(--gold); box-shadow: 0 0 18px #ffc83d55, inset 0 0 18px #ffc83d11; }
+  #results .trophy { font-size: 3rem; filter: drop-shadow(0 0 12px var(--gold)); }
+  #results h2 {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.85rem;
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+    margin: 12px 0 4px;
+    line-height: 1.9;
+  }
+  .level-badge {
+    display: inline-block;
+    font-family: "Press Start 2P", monospace;
+    font-size: 2.6rem;
+    color: #fff;
+    background: linear-gradient(180deg, var(--purple), #5b1fb0);
+    border: 2px solid #c9a0ff;
+    border-radius: 16px;
+    padding: 20px 42px;
+    margin: 16px 0 8px;
+    text-shadow: 0 0 12px var(--purple);
+    box-shadow: 0 0 24px #9d4dff88;
+  }
+  .stars { font-size: 1.5rem; letter-spacing: 6px; margin: 8px 0 4px; filter: drop-shadow(0 0 6px var(--gold)); }
+  .stars .off { opacity: 0.22; filter: grayscale(1); }
+  #results .score { color: var(--muted); margin-bottom: 12px; letter-spacing: 2px; }
+  .level-desc {
+    text-align: left;
+    background: #00e5ff0d;
+    border: 1px dashed var(--cyan);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  .rankup {
+    font-family: "Press Start 2P", monospace;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    margin: 18px 0 6px;
+    background: linear-gradient(90deg, var(--magenta), var(--purple), var(--cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 10px #ff3df066);
+  }
+  .rankup-sub { color: var(--muted); font-size: 0.9rem; letter-spacing: 1px; }
+
+  .unanswered-warning {
+    display: none;
+    color: #ff5d7a;
+    text-align: center;
+    margin-top: 14px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px #ff5d7a66;
+  }
+  footer {
+    text-align: center;
+    color: #5a7d99;
+    font-size: 0.85rem;
+    margin-top: 36px;
+    letter-spacing: 2px;
+  }
+  footer .b { color: var(--cyan); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="brand">
+    <div class="mic">🎙️</div>
+    <div class="name">ENGLISH <b>for ALL</b></div>
+    <div class="tag">Rank Up</div>
+  </div>
+
+  <header>
+    <h1>ENGLISH LEVEL TEST</h1>
+    <p class="sub">Descubre tu nivel CEFR (A1 – C2) &middot; 20 preguntas &middot; ~10 min</p>
+  </header>
+
+  <div id="intro" class="card student-info">
+    <div class="panel-title">★ INSTRUCCIONES</div>
+    <p>Elige la mejor opción en cada pregunta. Si no estás seguro, marca la respuesta que te suene más natural. Sin diccionario y sin traductor: ¡queremos tu nivel real!</p>
+    <p class="es">Las preguntas están en inglés. El resultado es una estimación de tu nivel CEFR; una breve entrevista oral lo confirma.</p>
+    <label for="studentName">Tu nombre</label>
+    <input type="text" id="studentName" placeholder="e.g. María García">
+    <div class="btn-row">
+      <button class="btn" onclick="startTest()">▶ START</button>
+      <span class="es">Pulsa para empezar</span>
+    </div>
+  </div>
+
+  <div id="test" style="display:none">
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 20</div>
+    </div>
+    <div id="questions"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="submitTest()">★ SEE MY RANK</button>
+      <p class="unanswered-warning" id="warning">⚠ Responde todas las preguntas antes de continuar.</p>
+    </div>
+  </div>
+
+  <div id="results" class="card">
+    <div class="trophy">🏆</div>
+    <h2 id="resultName">TU NIVEL</h2>
+    <div class="level-badge" id="levelBadge">B1</div>
+    <div class="stars" id="starRow"></div>
+    <p class="score" id="scoreText"></p>
+    <div class="level-desc" id="levelDesc"></div>
+    <p class="rankup">RANK UP!</p>
+    <p class="rankup-sub">¡Practica un poco cada día y sube de nivel! Reserva una breve entrevista oral para confirmar tu resultado.</p>
+    <div class="btn-row">
+      <button class="btn" onclick="location.reload()">↻ PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <footer><span class="b">ENGLISH for ALL</span> · Rank Up · Test de nivel CEFR · Resultado orientativo</footer>
+</div>
+
+<script>
+// Each question: text, options, index of correct answer.
+// Ordered from A1 to C2 difficulty.
+const QUESTIONS = [
+  // A1
+  { q: "She ____ from Italy.", o: ["is", "are", "be", "am"], a: 0 },
+  { q: "____ you like coffee?", o: ["Are", "Do", "Does", "Is"], a: 1 },
+  { q: "I have two ____.", o: ["childs", "childes", "children", "child"], a: 2 },
+  // A2
+  { q: "I ____ to the cinema last Saturday.", o: ["go", "goed", "went", "have gone"], a: 2 },
+  { q: "She is ____ than her sister.", o: ["more tall", "taller", "tallest", "as tall"], a: 1 },
+  { q: "We ____ dinner when the phone rang.", o: ["have", "were having", "are having", "had had"], a: 1 },
+  { q: "There isn't ____ milk in the fridge.", o: ["some", "no", "any", "a"], a: 2 },
+  // B1
+  { q: "I've lived in this city ____ 2015.", o: ["for", "since", "during", "from"], a: 1 },
+  { q: "If it rains tomorrow, we ____ at home.", o: ["stayed", "would stay", "will stay", "stay"], a: 2 },
+  { q: "You ____ smoke in the hospital. It's forbidden.", o: ["don't have to", "mustn't", "shouldn't have", "couldn't"], a: 1 },
+  { q: "The film was really boring, so I turned it ____.", o: ["off", "down", "out", "away"], a: 0 },
+  // B2
+  { q: "By the time we arrived, the concert ____.", o: ["already started", "has already started", "had already started", "was already starting"], a: 2 },
+  { q: "I'd rather you ____ tell anyone about this.", o: ["don't", "didn't", "won't", "not to"], a: 1 },
+  { q: "The new bridge ____ by the end of next year.", o: ["will have been built", "will be building", "is building", "will have building"], a: 0 },
+  { q: "She denied ____ the money.", o: ["to steal", "steal", "stealing", "to have steal"], a: 2 },
+  // C1
+  { q: "____ had I closed the door when the alarm went off.", o: ["Rarely", "No sooner", "Hardly", "Only"], a: 2 },
+  { q: "He took to running every morning, ____ surprised everyone who knew him.", o: ["that", "what", "which", "who"], a: 2 },
+  { q: "The proposal was rejected ____ its potential benefits.", o: ["despite of", "notwithstanding", "however", "even"], a: 1 },
+  // C2
+  { q: "Little ____ that the decision would change her life entirely.", o: ["she knew", "did she know", "she did know", "knew she"], a: 1 },
+  { q: "His remarks were tantamount ____ an admission of guilt.", o: ["with", "for", "to", "of"], a: 2 }
+];
+
+// Score bands → CEFR level (stars = rank out of 6)
+const LEVELS = [
+  { min: 0,  level: "A1", name: "Principiante", stars: 1,
+    desc: "Comprendes y usas expresiones cotidianas muy básicas y frases sencillas. Puedes presentarte y hacer preguntas personales simples." },
+  { min: 5,  level: "A2", name: "Elemental", stars: 2,
+    desc: "Te comunicas en situaciones sencillas y habituales, y describes en términos simples tu entorno y tus necesidades inmediatas." },
+  { min: 9,  level: "B1", name: "Intermedio", stars: 3,
+    desc: "Te desenvuelves en la mayoría de situaciones de un viaje, describes experiencias y acontecimientos, y justificas brevemente tus opiniones y planes." },
+  { min: 13, level: "B2", name: "Intermedio alto", stars: 4,
+    desc: "Interactúas con fluidez y naturalidad con hablantes nativos, comprendes textos complejos y escribes de forma clara y detallada sobre temas diversos." },
+  { min: 16, level: "C1", name: "Avanzado", stars: 5,
+    desc: "Usas el idioma con flexibilidad y eficacia para fines sociales, académicos y profesionales, y produces textos claros y bien estructurados sobre temas complejos." },
+  { min: 19, level: "C2", name: "Maestría", stars: 6,
+    desc: "Comprendes prácticamente todo lo que lees o escuchas y te expresas de forma espontánea, muy fluida y precisa, incluso en situaciones complejas." }
+];
+
+function startTest() {
+  const container = document.getElementById("questions");
+  container.innerHTML = QUESTIONS.map((item, i) => `
+    <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
+      <h3><span class="qnum">${String(i + 1).padStart(2, "0")}</span>${item.q}</h3>
+      ${item.o.map((opt, j) => `
+        <label class="option">
+          <input type="radio" name="q${i}" value="${j}" onchange="updateProgress()">
+          <span>${opt}</span>
+        </label>`).join("")}
+    </div>`).join("");
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("test").style.display = "block";
+  window.scrollTo({ top: 0 });
+}
+
+function answeredCount() {
+  let n = 0;
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    if (document.querySelector(`input[name="q${i}"]:checked`)) n++;
+  }
+  return n;
+}
+
+function updateProgress() {
+  const n = answeredCount();
+  document.getElementById("progressFill").style.width = (n / QUESTIONS.length * 100) + "%";
+  document.getElementById("progressLabel").textContent = `${n} / ${QUESTIONS.length}`;
+  document.getElementById("warning").style.display = "none";
+}
+
+function submitTest() {
+  if (answeredCount() < QUESTIONS.length) {
+    document.getElementById("warning").style.display = "block";
+    // Scroll to the first unanswered question
+    for (let i = 0; i < QUESTIONS.length; i++) {
+      if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+        document.getElementById(`q${i}`).scrollIntoView({ behavior: "smooth", block: "center" });
+        break;
+      }
+    }
+    return;
+  }
+  let score = 0;
+  QUESTIONS.forEach((item, i) => {
+    const chosen = document.querySelector(`input[name="q${i}"]:checked`);
+    if (chosen && Number(chosen.value) === item.a) score++;
+  });
+
+  let result = LEVELS[0];
+  for (const band of LEVELS) {
+    if (score >= band.min) result = band;
+  }
+
+  const name = document.getElementById("studentName").value.trim();
+  document.getElementById("resultName").textContent = name ? `${name.toUpperCase()} — TU NIVEL:` : "TU NIVEL:";
+  document.getElementById("levelBadge").textContent = result.level;
+  document.getElementById("starRow").innerHTML =
+    "⭐".repeat(result.stars) + `<span class="off">${"⭐".repeat(6 - result.stars)}</span>`;
+  document.getElementById("scoreText").textContent = `PUNTUACIÓN: ${score} / ${QUESTIONS.length} — ${result.name}`;
+  document.getElementById("levelDesc").textContent = result.desc;
+
+  document.getElementById("test").style.display = "none";
+  document.getElementById("results").style.display = "block";
+  window.scrollTo({ top: 0 });
+}
+</script>
+</body>
+</html>
