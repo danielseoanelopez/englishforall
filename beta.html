@@ -45,7 +45,7 @@
     z-index: -1;
     background:
       linear-gradient(rgba(5, 5, 14, 0.68), rgba(5, 5, 14, 0.82)),
-      url("nebula.jpg.png") center / cover no-repeat;
+      url("nebula.jpg") center / cover no-repeat;
   }
   .container { max-width: 760px; margin: 0 auto; }
 
@@ -55,7 +55,13 @@
     margin-bottom: 10px;
     letter-spacing: 2px;
   }
-  .brand .mic { font-size: 1.6rem; filter: drop-shadow(0 0 6px var(--cyan)); }
+  .brand .logo {
+    height: 96px;
+    max-width: 82%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px #00e5ff66);
+    margin-bottom: 6px;
+  }
   .brand .name {
     font-family: "Press Start 2P", monospace;
     font-size: 0.85rem;
@@ -141,7 +147,7 @@
     margin-bottom: 14px;
     color: var(--text);
   }
-  .question h3 .qnum {
+  .qnum {
     display: inline-block;
     font-family: "Press Start 2P", monospace;
     font-size: 0.7rem;
@@ -152,7 +158,7 @@
     margin-right: 10px;
     box-shadow: 0 0 8px var(--cyan);
   }
-  .card.alt .question h3 .qnum, .card.alt .qnum { background: var(--magenta); box-shadow: 0 0 8px var(--magenta); }
+  .card.alt .qnum { background: var(--magenta); box-shadow: 0 0 8px var(--magenta); }
   .option {
     display: flex;
     align-items: center;
@@ -263,6 +269,39 @@
     margin: 16px 0;
     font-size: 0.95rem;
   }
+
+  /* ===== Review of mistakes ===== */
+  .review-box { text-align: left; margin: 18px 0; }
+  .review-item {
+    border: 1px dashed #2a4a6a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    background: #0a0a18aa;
+  }
+  .review-item .qnum {
+    font-size: 0.62rem;
+    background: var(--magenta);
+    box-shadow: 0 0 8px var(--magenta);
+  }
+  .review-item .rq { margin-bottom: 6px; }
+  .wrong { color: #ff5d7a; }
+  .right { color: #3dffa0; }
+  .fb {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-top: 6px;
+    border-top: 1px dashed #2a4a6a;
+    padding-top: 6px;
+  }
+  .perfect {
+    color: #3dffa0;
+    text-align: center;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px #3dffa066;
+  }
+
   .rankup {
     font-family: "Press Start 2P", monospace;
     font-size: clamp(1rem, 4vw, 1.5rem);
@@ -297,7 +336,7 @@
 <div class="container">
 
   <div class="brand">
-    <div class="mic">🎙️</div>
+    <img class="logo" src="logo.png" alt="English for All — Rank Up">
     <div class="name">ENGLISH <b>for ALL</b></div>
     <div class="tag">Rank Up</div>
   </div>
@@ -338,6 +377,10 @@
     <div class="stars" id="starRow"></div>
     <p class="score" id="scoreText"></p>
     <div class="level-desc" id="levelDesc"></div>
+    <div class="review-box">
+      <div class="panel-title">★ REPASO · TUS FALLOS</div>
+      <div id="reviewList"></div>
+    </div>
     <p class="rankup">RANK UP!</p>
     <p class="rankup-sub">¡Practica un poco cada día y sube de nivel! Reserva una breve entrevista oral para confirmar tu resultado.</p>
     <div class="btn-row">
@@ -349,35 +392,55 @@
 </div>
 
 <script>
-// Each question: text, options, index of correct answer.
+// Each question: text, options, index of correct answer, Spanish feedback.
 // Ordered from A1 to C2 difficulty.
 const QUESTIONS = [
   // A1
-  { q: "She ____ from Italy.", o: ["is", "are", "be", "am"], a: 0 },
-  { q: "____ you like coffee?", o: ["Are", "Do", "Does", "Is"], a: 1 },
-  { q: "I have two ____.", o: ["childs", "childes", "children", "child"], a: 2 },
+  { q: "She ____ from Italy.", o: ["is", "are", "be", "am"], a: 0,
+    fb: "El verbo 'to be' con 'she' es 'is': she is, he is, it is." },
+  { q: "____ you like coffee?", o: ["Are", "Do", "Does", "Is"], a: 1,
+    fb: "Las preguntas en presente simple con 'you' usan el auxiliar 'do'." },
+  { q: "I have two ____.", o: ["childs", "childes", "children", "child"], a: 2,
+    fb: "'Child' tiene un plural irregular: 'children'." },
   // A2
-  { q: "I ____ to the cinema last Saturday.", o: ["go", "goed", "went", "have gone"], a: 2 },
-  { q: "She is ____ than her sister.", o: ["more tall", "taller", "tallest", "as tall"], a: 1 },
-  { q: "We ____ dinner when the phone rang.", o: ["have", "were having", "are having", "had had"], a: 1 },
-  { q: "There isn't ____ milk in the fridge.", o: ["some", "no", "any", "a"], a: 2 },
+  { q: "I ____ to the cinema last Saturday.", o: ["go", "goed", "went", "have gone"], a: 2,
+    fb: "Con 'last Saturday' usamos pasado simple. 'Go' es irregular: 'went'." },
+  { q: "She is ____ than her sister.", o: ["more tall", "taller", "tallest", "as tall"], a: 1,
+    fb: "Los adjetivos cortos forman el comparativo con -er: 'taller than'." },
+  { q: "We ____ dinner when the phone rang.", o: ["have", "were having", "are having", "had had"], a: 1,
+    fb: "Pasado continuo ('were having') para la acción en curso interrumpida por otra." },
+  { q: "There isn't ____ milk in the fridge.", o: ["some", "no", "any", "a"], a: 2,
+    fb: "En frases negativas se usa 'any'; 'some' es para afirmativas." },
   // B1
-  { q: "I've lived in this city ____ 2015.", o: ["for", "since", "during", "from"], a: 1 },
-  { q: "If it rains tomorrow, we ____ at home.", o: ["stayed", "would stay", "will stay", "stay"], a: 2 },
-  { q: "You ____ smoke in the hospital. It's forbidden.", o: ["don't have to", "mustn't", "shouldn't have", "couldn't"], a: 1 },
-  { q: "The film was really boring, so I turned it ____.", o: ["off", "down", "out", "away"], a: 0 },
+  { q: "I've lived in this city ____ 2015.", o: ["for", "since", "during", "from"], a: 1,
+    fb: "'Since' + momento concreto (2015); 'for' + duración (for 10 years)." },
+  { q: "If it rains tomorrow, we ____ at home.", o: ["stayed", "would stay", "will stay", "stay"], a: 2,
+    fb: "Primera condicional: if + presente simple, will + infinitivo." },
+  { q: "You ____ smoke in the hospital. It's forbidden.", o: ["don't have to", "mustn't", "shouldn't have", "couldn't"], a: 1,
+    fb: "'Mustn't' = prohibición. 'Don't have to' significa que no es necesario." },
+  { q: "The film was really boring, so I turned it ____.", o: ["off", "down", "out", "away"], a: 0,
+    fb: "Phrasal verb 'turn off' = apagar (la tele, la luz...)." },
   // B2
-  { q: "By the time we arrived, the concert ____.", o: ["already started", "has already started", "had already started", "was already starting"], a: 2 },
-  { q: "I'd rather you ____ tell anyone about this.", o: ["don't", "didn't", "won't", "not to"], a: 1 },
-  { q: "The new bridge ____ by the end of next year.", o: ["will have been built", "will be building", "is building", "will have building"], a: 0 },
-  { q: "She denied ____ the money.", o: ["to steal", "steal", "stealing", "to have steal"], a: 2 },
+  { q: "By the time we arrived, the concert ____.", o: ["already started", "has already started", "had already started", "was already starting"], a: 2,
+    fb: "Past perfect ('had started') para una acción anterior a otra acción pasada." },
+  { q: "I'd rather you ____ tell anyone about this.", o: ["don't", "didn't", "won't", "not to"], a: 1,
+    fb: "'I'd rather you' + pasado simple, aunque hablemos del presente o futuro." },
+  { q: "The new bridge ____ by the end of next year.", o: ["will have been built", "will be building", "is building", "will have building"], a: 0,
+    fb: "Futuro perfecto en pasiva: 'will have been built' (habrá sido construido)." },
+  { q: "She denied ____ the money.", o: ["to steal", "steal", "stealing", "to have steal"], a: 2,
+    fb: "'Deny' va seguido de gerundio (-ing): denied stealing." },
   // C1
-  { q: "____ had I closed the door when the alarm went off.", o: ["Rarely", "No sooner", "Hardly", "Only"], a: 2 },
-  { q: "He took to running every morning, ____ surprised everyone who knew him.", o: ["that", "what", "which", "who"], a: 2 },
-  { q: "The proposal was rejected ____ its potential benefits.", o: ["despite of", "notwithstanding", "however", "even"], a: 1 },
+  { q: "____ had I closed the door when the alarm went off.", o: ["Rarely", "No sooner", "Hardly", "Only"], a: 2,
+    fb: "Inversión formal: 'Hardly had I... when...'. ('No sooner' iría con 'than')." },
+  { q: "He took to running every morning, ____ surprised everyone who knew him.", o: ["that", "what", "which", "who"], a: 2,
+    fb: "'Which' introduce una relativa que se refiere a toda la frase anterior." },
+  { q: "The proposal was rejected ____ its potential benefits.", o: ["despite of", "notwithstanding", "however", "even"], a: 1,
+    fb: "'Notwithstanding' = a pesar de (formal). Ojo: 'despite' nunca lleva 'of'." },
   // C2
-  { q: "Little ____ that the decision would change her life entirely.", o: ["she knew", "did she know", "she did know", "knew she"], a: 1 },
-  { q: "His remarks were tantamount ____ an admission of guilt.", o: ["with", "for", "to", "of"], a: 2 }
+  { q: "Little ____ that the decision would change her life entirely.", o: ["she knew", "did she know", "she did know", "knew she"], a: 1,
+    fb: "Tras 'Little' al inicio hay inversión: 'Little did she know...'." },
+  { q: "His remarks were tantamount ____ an admission of guilt.", o: ["with", "for", "to", "of"], a: 2,
+    fb: "'Tantamount to' = equivalente a. Siempre con la preposición 'to'." }
 ];
 
 // Score bands → CEFR level (stars = rank out of 6)
@@ -439,11 +502,12 @@ function submitTest() {
     }
     return;
   }
-  let score = 0;
+  const mistakes = [];
   QUESTIONS.forEach((item, i) => {
-    const chosen = document.querySelector(`input[name="q${i}"]:checked`);
-    if (chosen && Number(chosen.value) === item.a) score++;
+    const chosen = Number(document.querySelector(`input[name="q${i}"]:checked`).value);
+    if (chosen !== item.a) mistakes.push({ i, chosen, item });
   });
+  const score = QUESTIONS.length - mistakes.length;
 
   let result = LEVELS[0];
   for (const band of LEVELS) {
@@ -457,6 +521,20 @@ function submitTest() {
     "⭐".repeat(result.stars) + `<span class="off">${"⭐".repeat(6 - result.stars)}</span>`;
   document.getElementById("scoreText").textContent = `PUNTUACIÓN: ${score} / ${QUESTIONS.length} — ${result.name}`;
   document.getElementById("levelDesc").textContent = result.desc;
+
+  // Review of mistakes with Spanish feedback
+  const list = document.getElementById("reviewList");
+  if (mistakes.length === 0) {
+    list.innerHTML = '<p class="perfect">¡PERFECTO! Has acertado todas las preguntas. 🎉</p>';
+  } else {
+    list.innerHTML = mistakes.map(m => `
+      <div class="review-item">
+        <p class="rq"><span class="qnum">${String(m.i + 1).padStart(2, "0")}</span>${m.item.q}</p>
+        <p class="wrong">✗ Tu respuesta: ${m.item.o[m.chosen]}</p>
+        <p class="right">✓ Correcta: ${m.item.o[m.item.a]}</p>
+        <p class="fb">${m.item.fb}</p>
+      </div>`).join("");
+  }
 
   document.getElementById("test").style.display = "none";
   document.getElementById("results").style.display = "block";
