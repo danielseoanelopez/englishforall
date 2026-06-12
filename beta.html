@@ -74,7 +74,10 @@
     font-family: "Press Start 2P", monospace;
     font-size: clamp(1.1rem, 4.5vw, 1.9rem);
     color: var(--purple);
-    text-shadow: 0 0 10px var(--purple), 0 0 30px #9d4dff88, 0 0 2px #fff;
+    text-shadow:
+      2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff,
+      2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff,
+      0 0 14px var(--purple), 0 0 34px #9d4dff88;
     margin: 14px 0 12px;
     letter-spacing: 2px;
   }
