@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English for All &middot; Level Test (CEFR)</title>
+<title>English for All &middot; Test de nivel de ingl&eacute;s (CEFR)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -290,14 +290,14 @@
 
   <header>
     <h1>ENGLISH LEVEL TEST</h1>
-    <p class="sub">Find your CEFR rank (A1 – C2) &middot; 20 questions &middot; ~10 min</p>
+    <p class="sub">Descubre tu nivel CEFR (A1 – C2) &middot; 20 preguntas &middot; ~10 min</p>
   </header>
 
   <div id="intro" class="card student-info">
-    <div class="panel-title">★ HOW TO PLAY · INSTRUCCIONES</div>
-    <p>Choose the best option for each question. If you are not sure, pick the answer that feels most natural. No dictionary, no translator — this is your real level!</p>
-    <p class="es">Elige la mejor opción en cada pregunta, sin diccionario ni traductor. El resultado es una estimación de tu nivel CEFR.</p>
-    <label for="studentName">Player name · Tu nombre</label>
+    <div class="panel-title">★ INSTRUCCIONES</div>
+    <p>Elige la mejor opción en cada pregunta. Si no estás seguro, marca la respuesta que te suene más natural. Sin diccionario y sin traductor: ¡queremos tu nivel real!</p>
+    <p class="es">Las preguntas están en inglés. El resultado es una estimación de tu nivel CEFR; una breve entrevista oral lo confirma.</p>
+    <label for="studentName">Tu nombre</label>
     <input type="text" id="studentName" placeholder="e.g. María García">
     <div class="btn-row">
       <button class="btn" onclick="startTest()">▶ START</button>
@@ -313,25 +313,25 @@
     <div id="questions"></div>
     <div class="btn-row">
       <button class="btn" onclick="submitTest()">★ SEE MY RANK</button>
-      <p class="unanswered-warning" id="warning">⚠ Please answer all the questions. · Responde todas las preguntas.</p>
+      <p class="unanswered-warning" id="warning">⚠ Responde todas las preguntas antes de continuar.</p>
     </div>
   </div>
 
   <div id="results" class="card">
     <div class="trophy">🏆</div>
-    <h2 id="resultName">YOUR RANK</h2>
+    <h2 id="resultName">TU NIVEL</h2>
     <div class="level-badge" id="levelBadge">B1</div>
     <div class="stars" id="starRow"></div>
     <p class="score" id="scoreText"></p>
     <div class="level-desc" id="levelDesc"></div>
     <p class="rankup">RANK UP!</p>
-    <p class="rankup-sub">Practice a little every day and rank up! · Book a short speaking interview to confirm your level.</p>
+    <p class="rankup-sub">¡Practica un poco cada día y sube de nivel! Reserva una breve entrevista oral para confirmar tu resultado.</p>
     <div class="btn-row">
       <button class="btn" onclick="location.reload()">↻ PLAY AGAIN</button>
     </div>
   </div>
 
-  <footer><span class="b">ENGLISH for ALL</span> · Rank Up · CEFR placement test · Results are indicative only</footer>
+  <footer><span class="b">ENGLISH for ALL</span> · Rank Up · Test de nivel CEFR · Resultado orientativo</footer>
 </div>
 
 <script>
@@ -368,18 +368,18 @@ const QUESTIONS = [
 
 // Score bands → CEFR level (stars = rank out of 6)
 const LEVELS = [
-  { min: 0,  level: "A1", name: "Beginner", stars: 1,
-    desc: "You can understand and use very basic everyday expressions and simple phrases. You can introduce yourself and ask simple personal questions." },
-  { min: 5,  level: "A2", name: "Elementary", stars: 2,
-    desc: "You can communicate in simple, routine situations and describe in simple terms your background and immediate environment." },
-  { min: 9,  level: "B1", name: "Intermediate", stars: 3,
-    desc: "You can deal with most situations while travelling, describe experiences and events, and give brief reasons and explanations for opinions and plans." },
-  { min: 13, level: "B2", name: "Upper-Intermediate", stars: 4,
-    desc: "You can interact with fluency and spontaneity with native speakers, understand complex texts, and produce clear, detailed writing on a wide range of subjects." },
-  { min: 16, level: "C1", name: "Advanced", stars: 5,
-    desc: "You can use language flexibly and effectively for social, academic and professional purposes, and produce well-structured, detailed text on complex subjects." },
-  { min: 19, level: "C2", name: "Proficiency", stars: 6,
-    desc: "You can understand virtually everything you hear or read, and express yourself spontaneously, very fluently and precisely, even in complex situations." }
+  { min: 0,  level: "A1", name: "Principiante", stars: 1,
+    desc: "Comprendes y usas expresiones cotidianas muy básicas y frases sencillas. Puedes presentarte y hacer preguntas personales simples." },
+  { min: 5,  level: "A2", name: "Elemental", stars: 2,
+    desc: "Te comunicas en situaciones sencillas y habituales, y describes en términos simples tu entorno y tus necesidades inmediatas." },
+  { min: 9,  level: "B1", name: "Intermedio", stars: 3,
+    desc: "Te desenvuelves en la mayoría de situaciones de un viaje, describes experiencias y acontecimientos, y justificas brevemente tus opiniones y planes." },
+  { min: 13, level: "B2", name: "Intermedio alto", stars: 4,
+    desc: "Interactúas con fluidez y naturalidad con hablantes nativos, comprendes textos complejos y escribes de forma clara y detallada sobre temas diversos." },
+  { min: 16, level: "C1", name: "Avanzado", stars: 5,
+    desc: "Usas el idioma con flexibilidad y eficacia para fines sociales, académicos y profesionales, y produces textos claros y bien estructurados sobre temas complejos." },
+  { min: 19, level: "C2", name: "Maestría", stars: 6,
+    desc: "Comprendes prácticamente todo lo que lees o escuchas y te expresas de forma espontánea, muy fluida y precisa, incluso en situaciones complejas." }
 ];
 
 function startTest() {
@@ -437,11 +437,11 @@ function submitTest() {
   }
 
   const name = document.getElementById("studentName").value.trim();
-  document.getElementById("resultName").textContent = name ? `${name.toUpperCase()} — YOUR RANK:` : "YOUR RANK:";
+  document.getElementById("resultName").textContent = name ? `${name.toUpperCase()} — TU NIVEL:` : "TU NIVEL:";
   document.getElementById("levelBadge").textContent = result.level;
   document.getElementById("starRow").innerHTML =
     "⭐".repeat(result.stars) + `<span class="off">${"⭐".repeat(6 - result.stars)}</span>`;
-  document.getElementById("scoreText").textContent = `SCORE: ${score} / ${QUESTIONS.length} — ${result.name}`;
+  document.getElementById("scoreText").textContent = `PUNTUACIÓN: ${score} / ${QUESTIONS.length} — ${result.name}`;
   document.getElementById("levelDesc").textContent = result.desc;
 
   document.getElementById("test").style.display = "none";
