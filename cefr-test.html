@@ -123,6 +123,17 @@
     letter-spacing: 1px;
   }
   .es { color: var(--muted); font-size: 0.85rem; }
+  .cefr-note {
+    background: #00e5ff0d;
+    border: 1px dashed var(--cyan);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 14px 0 6px;
+    font-size: 1rem;
+    color: var(--text);
+    box-shadow: 0 0 10px #00e5ff22;
+  }
+  .cefr-note b { color: var(--cyan); }
 
   .student-info label {
     display: block;
@@ -413,7 +424,7 @@
   <div id="intro" class="card student-info">
     <div class="panel-title">★ INSTRUCCIONES</div>
     <p>Elige la mejor opción en cada pregunta. Si no estás seguro, marca la respuesta que te suene más natural. Sin diccionario y sin traductor: ¡queremos tu nivel real!</p>
-    <p class="es">¿Qué es el CEFR? Es el Marco Común Europeo de Referencia: clasifica los idiomas en seis niveles, de A1 (principiante) a C2 (maestría). Las preguntas están en inglés; el resultado es una estimación y una breve entrevista oral lo confirma.</p>
+    <div class="cefr-note"><b>¿Qué es el CEFR?</b> Es el Marco Común Europeo de Referencia: clasifica los idiomas en seis niveles, de A1 (principiante) a C2 (maestría). Las preguntas están en inglés; el resultado es una estimación y una breve entrevista oral lo confirma.</div>
     <label for="studentName">Tu nombre</label>
     <input type="text" id="studentName" placeholder="e.g. María García">
     <div class="btn-row">
@@ -467,9 +478,9 @@
 // linkedin:  full URL, e.g. "https://linkedin.com/in/daniel-seoane"
 // whatsapp:  number with country code, no spaces, e.g. "https://wa.me/34600111222"
 const SOCIAL = {
-  instagram: "",
-  linkedin: "",
-  whatsapp: ""
+  instagram: "https://www.instagram.com/englishforall_dan/",
+  linkedin: "https://www.linkedin.com/in/daniel-s-6572926b/?locale=es",
+  whatsapp: "https://wa.me/541123709477"
 };
 (function initSocial() {
   const map = { soIg: SOCIAL.instagram, soLi: SOCIAL.linkedin, soWa: SOCIAL.whatsapp };
