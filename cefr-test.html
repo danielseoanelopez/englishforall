@@ -59,9 +59,12 @@
     height: 130px;
     max-width: 88%;
     object-fit: contain;
-    /* screen blend drops the logo's black background into the page */
-    mix-blend-mode: screen;
-    filter: drop-shadow(0 0 14px #00e5ff77);
+    background: #000;
+    padding: 10px 18px;
+    border: 2px solid var(--cyan);
+    border-radius: 16px;
+    box-shadow: 0 0 16px #00e5ff55, inset 0 0 12px #00e5ff22;
+    filter: brightness(1.15) saturate(1.2);
   }
   .brand .name {
     font-family: "Press Start 2P", monospace;
@@ -331,6 +334,29 @@
     letter-spacing: 2px;
   }
   footer .b { color: var(--cyan); }
+
+  /* ===== Desktop layout ===== */
+  @media (min-width: 860px) {
+    body { font-size: 18px; }
+    .container { max-width: 1000px; }
+    .brand .logo { height: 150px; }
+    header h1 { font-size: 2.2rem; }
+    header .sub { font-size: 1.05rem; }
+    .card { padding: 26px 32px; }
+    .opts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 16px;
+    }
+    .opts .option { margin-bottom: 0; }
+    #reviewList {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    #reviewList .review-item { margin-bottom: 0; }
+  }
 </style>
 </head>
 <body>
@@ -463,11 +489,13 @@ function startTest() {
   container.innerHTML = QUESTIONS.map((item, i) => `
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
       <h3><span class="qnum">${String(i + 1).padStart(2, "0")}</span>${item.q}</h3>
+      <div class="opts">
       ${item.o.map((opt, j) => `
         <label class="option">
           <input type="radio" name="q${i}" value="${j}" onchange="updateProgress()">
           <span>${opt}</span>
         </label>`).join("")}
+      </div>
     </div>`).join("");
   document.getElementById("intro").style.display = "none";
   document.getElementById("test").style.display = "block";
