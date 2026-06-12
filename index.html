@@ -36,6 +36,17 @@
     padding: 24px 14px 64px;
     font-size: 17px;
   }
+  /* Nebula background image with dark overlay for text readability.
+     Falls back gracefully to the starfield above if the image is missing. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(rgba(5, 5, 14, 0.68), rgba(5, 5, 14, 0.82)),
+      url("nebula.jpg.png") center / cover no-repeat;
+  }
   .container { max-width: 760px; margin: 0 auto; }
 
   /* ===== Brand header ===== */
