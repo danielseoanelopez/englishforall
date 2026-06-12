@@ -14,7 +14,7 @@
     --purple: #9d4dff;
     --gold: #ffc83d;
     --bg: #05050e;
-    --panel: rgba(10, 10, 26, 0.92);
+    --panel: rgba(20, 22, 48, 0.93);
     --text: #eaf7ff;
     --muted: #7fd9e8;
   }
@@ -56,11 +56,12 @@
     letter-spacing: 2px;
   }
   .brand .logo {
-    height: 96px;
-    max-width: 82%;
+    height: 130px;
+    max-width: 88%;
     object-fit: contain;
-    filter: drop-shadow(0 0 10px #00e5ff66);
-    margin-bottom: 6px;
+    /* screen blend drops the logo's black background into the page */
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 14px #00e5ff77);
   }
   .brand .name {
     font-family: "Press Start 2P", monospace;
@@ -130,7 +131,7 @@
   .student-info input {
     width: 100%;
     padding: 10px 14px;
-    background: #060614;
+    background: #10122a;
     border: 2px solid var(--purple);
     border-radius: 10px;
     color: var(--text);
@@ -278,7 +279,7 @@
     padding: 12px 14px;
     margin-bottom: 10px;
     font-size: 0.95rem;
-    background: #0a0a18aa;
+    background: #181a3aaa;
   }
   .review-item .qnum {
     font-size: 0.62rem;
@@ -337,8 +338,6 @@
 
   <div class="brand">
     <img class="logo" src="logo.png" alt="English for All — Rank Up">
-    <div class="name">ENGLISH <b>for ALL</b></div>
-    <div class="tag">Rank Up</div>
   </div>
 
   <header>
