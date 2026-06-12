@@ -125,7 +125,7 @@
   .es { color: var(--muted); font-size: 0.85rem; }
   .cefr-note {
     background: #00e5ff0d;
-    border: 1px dashed var(--cyan);
+    border: 1px solid var(--cyan);
     border-radius: 12px;
     padding: 14px 18px;
     margin: 14px 0 6px;
@@ -180,7 +180,7 @@
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
-    border: 1px dashed #2a4a6a;
+    border: 1px solid #2a4a6a;
     border-radius: 10px;
     margin-bottom: 9px;
     cursor: pointer;
@@ -282,7 +282,7 @@
   .level-desc {
     text-align: left;
     background: #00e5ff0d;
-    border: 1px dashed var(--cyan);
+    border: 1px solid var(--cyan);
     border-radius: 12px;
     padding: 16px 18px;
     margin: 16px 0;
@@ -292,7 +292,7 @@
   /* ===== Review of mistakes ===== */
   .review-box { text-align: left; margin: 18px 0; }
   .review-item {
-    border: 1px dashed #2a4a6a;
+    border: 1px solid #2a4a6a;
     border-radius: 10px;
     padding: 12px 14px;
     margin-bottom: 10px;
@@ -311,7 +311,7 @@
     color: var(--muted);
     font-size: 0.88rem;
     margin-top: 6px;
-    border-top: 1px dashed #2a4a6a;
+    border-top: 1px solid #2a4a6a;
     padding-top: 6px;
   }
   .perfect {
@@ -333,6 +333,21 @@
   }
   .rankup-sub { color: var(--muted); font-size: 0.9rem; letter-spacing: 1px; }
 
+  .attempts {
+    margin-top: 14px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    text-shadow: 0 0 8px #ffc83d44;
+  }
+  .blocked {
+    display: none;
+    color: #ff5d7a;
+    text-align: center;
+    margin-top: 16px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px #ff5d7a66;
+  }
   .unanswered-warning {
     display: none;
     color: #ff5d7a;
@@ -377,7 +392,7 @@
     margin: 36px auto 0;
     letter-spacing: 2px;
     background: var(--panel);
-    border: 1px dashed #3a5a7a;
+    border: 1px solid #3a5a7a;
     border-radius: 12px;
     padding: 12px 20px;
     width: fit-content;
@@ -428,8 +443,10 @@
     <label for="studentName">Tu nombre</label>
     <input type="text" id="studentName" placeholder="e.g. María García">
     <div class="btn-row">
-      <button class="btn" onclick="startTest()">▶ START</button>
+      <button class="btn" id="startBtn" onclick="startTest()">▶ START</button>
       <span class="es">Pulsa para empezar</span>
+      <p class="attempts" id="attemptInfo"></p>
+      <p class="blocked" id="blockedMsg">⚠ Has alcanzado el límite de 3 intentos en este dispositivo.<br>Escríbeme por WhatsApp para una evaluación personalizada.</p>
     </div>
   </div>
 
@@ -491,6 +508,41 @@ const SOCIAL = {
   }
   if (!visible) document.getElementById("socialBar").style.display = "none";
 })();
+
+// ===== Attempt limit (per browser/device via localStorage) =====
+// Teacher bypass: open the page once with ?profe=rankup to unlock
+// unlimited attempts on that device. ?reset=1 clears the counter.
+const MAX_ATTEMPTS = 3;
+(function handleParams() {
+  try {
+    const p = new URLSearchParams(location.search);
+    if (p.get("profe") === "rankup") localStorage.setItem("efa_teacher", "1");
+    if (p.get("reset") === "1") localStorage.removeItem("efa_attempts");
+  } catch (e) {}
+})();
+function isTeacher() {
+  try { return localStorage.getItem("efa_teacher") === "1"; } catch (e) { return false; }
+}
+function getAttempts() {
+  try { return Number(localStorage.getItem("efa_attempts") || 0); } catch (e) { return 0; }
+}
+function addAttempt() {
+  if (isTeacher()) return;
+  try { localStorage.setItem("efa_attempts", getAttempts() + 1); } catch (e) {}
+}
+function refreshAttemptUI() {
+  if (isTeacher()) {
+    document.getElementById("attemptInfo").textContent = "MODO PROFE · INTENTOS ∞";
+    return;
+  }
+  const used = Math.min(getAttempts(), MAX_ATTEMPTS);
+  document.getElementById("attemptInfo").textContent = `INTENTOS: ${used} / ${MAX_ATTEMPTS}`;
+  if (used >= MAX_ATTEMPTS) {
+    document.getElementById("startBtn").style.display = "none";
+    document.getElementById("blockedMsg").style.display = "block";
+  }
+}
+refreshAttemptUI();
 
 // Each question: text, options, index of correct answer, Spanish feedback.
 // Ordered from A1 to C2 difficulty.
@@ -560,6 +612,7 @@ const LEVELS = [
 ];
 
 function startTest() {
+  if (!isTeacher() && getAttempts() >= MAX_ATTEMPTS) { refreshAttemptUI(); return; }
   const container = document.getElementById("questions");
   container.innerHTML = QUESTIONS.map((item, i) => `
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
@@ -604,6 +657,7 @@ function submitTest() {
     }
     return;
   }
+  addAttempt();
   const mistakes = [];
   QUESTIONS.forEach((item, i) => {
     const chosen = Number(document.querySelector(`input[name="q${i}"]:checked`).value);
