@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
   :root {
     --cyan: #00e5ff;
@@ -14,7 +15,7 @@
     --purple: #9d4dff;
     --gold: #ffc83d;
     --bg: #05050e;
-    --panel: rgba(10, 10, 26, 0.92);
+    --panel: rgba(20, 22, 48, 0.93);
     --text: #eaf7ff;
     --muted: #7fd9e8;
   }
@@ -45,7 +46,7 @@
     z-index: -1;
     background:
       linear-gradient(rgba(5, 5, 14, 0.68), rgba(5, 5, 14, 0.82)),
-      url("nebula.jpg") center / cover no-repeat;
+      url("nebula.webp") center / cover no-repeat;
   }
   .container { max-width: 760px; margin: 0 auto; }
 
@@ -56,11 +57,15 @@
     letter-spacing: 2px;
   }
   .brand .logo {
-    height: 96px;
-    max-width: 82%;
+    height: 130px;
+    max-width: 88%;
     object-fit: contain;
-    filter: drop-shadow(0 0 10px #00e5ff66);
-    margin-bottom: 6px;
+    background: #000;
+    padding: 10px 18px;
+    border: 2px solid var(--cyan);
+    border-radius: 16px;
+    box-shadow: 0 0 16px #00e5ff55, inset 0 0 12px #00e5ff22;
+    filter: brightness(1.15) saturate(1.2);
   }
   .brand .name {
     font-family: "Press Start 2P", monospace;
@@ -118,6 +123,17 @@
     letter-spacing: 1px;
   }
   .es { color: var(--muted); font-size: 0.85rem; }
+  .cefr-note {
+    background: #00e5ff0d;
+    border: 1px solid var(--cyan);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 14px 0 6px;
+    font-size: 1rem;
+    color: var(--text);
+    box-shadow: 0 0 10px #00e5ff22;
+  }
+  .cefr-note b { color: var(--cyan); }
 
   .student-info label {
     display: block;
@@ -130,7 +146,7 @@
   .student-info input {
     width: 100%;
     padding: 10px 14px;
-    background: #060614;
+    background: #10122a;
     border: 2px solid var(--purple);
     border-radius: 10px;
     color: var(--text);
@@ -164,7 +180,7 @@
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
-    border: 1px dashed #2a4a6a;
+    border: 1px solid #2a4a6a;
     border-radius: 10px;
     margin-bottom: 9px;
     cursor: pointer;
@@ -197,6 +213,7 @@
     text-shadow: 0 0 6px #000;
     box-shadow: 0 0 14px #ff3df077;
     transition: transform 0.1s, box-shadow 0.15s;
+    text-decoration: none;
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 0 22px #ff3df0aa; }
   .btn-row { text-align: center; margin-top: 26px; }
@@ -206,8 +223,11 @@
   .progress-wrap {
     position: sticky;
     top: 0;
-    background: var(--bg);
-    padding: 12px 0 8px;
+    background: rgba(5, 5, 14, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 0 0 14px 14px;
+    padding: 12px 10px 8px;
     z-index: 10;
   }
   .progress-bar {
@@ -263,7 +283,7 @@
   .level-desc {
     text-align: left;
     background: #00e5ff0d;
-    border: 1px dashed var(--cyan);
+    border: 1px solid var(--cyan);
     border-radius: 12px;
     padding: 16px 18px;
     margin: 16px 0;
@@ -273,12 +293,12 @@
   /* ===== Review of mistakes ===== */
   .review-box { text-align: left; margin: 18px 0; }
   .review-item {
-    border: 1px dashed #2a4a6a;
+    border: 1px solid #2a4a6a;
     border-radius: 10px;
     padding: 12px 14px;
     margin-bottom: 10px;
     font-size: 0.95rem;
-    background: #0a0a18aa;
+    background: #181a3aaa;
   }
   .review-item .qnum {
     font-size: 0.62rem;
@@ -292,7 +312,7 @@
     color: var(--muted);
     font-size: 0.88rem;
     margin-top: 6px;
-    border-top: 1px dashed #2a4a6a;
+    border-top: 1px solid #2a4a6a;
     padding-top: 6px;
   }
   .perfect {
@@ -314,6 +334,49 @@
   }
   .rankup-sub { color: var(--muted); font-size: 0.9rem; letter-spacing: 1px; }
 
+  /* ===== Contact box on results ===== */
+  .contact-box {
+    background: #00e5ff0d;
+    border: 1px solid var(--cyan);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 20px 0 4px;
+    box-shadow: 0 0 10px #00e5ff22;
+    font-size: 0.95rem;
+  }
+  .contact-box b { color: var(--gold); }
+  .wa-btn {
+    background: linear-gradient(180deg, #2fd36b, #128c5e);
+    border-color: #8af2b5;
+    box-shadow: 0 0 14px #2fd36b77;
+    margin-top: 14px;
+  }
+  .wa-btn:hover { box-shadow: 0 0 22px #2fd36baa; }
+  .share-btn {
+    background: linear-gradient(180deg, #19b8d6, #0a6f93);
+    border-color: #9ff1ff;
+    box-shadow: 0 0 14px #19b8d677;
+    margin-right: 10px;
+  }
+  .share-btn:hover { box-shadow: 0 0 22px #19b8d6aa; }
+  .social.mini { margin-top: 10px; margin-bottom: 8px; gap: 10px; }
+  .social.mini a { width: 42px; height: 42px; font-size: 1.15rem; }
+
+  .attempts {
+    margin-top: 14px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    text-shadow: 0 0 8px #ffc83d44;
+  }
+  .blocked {
+    display: none;
+    color: #ff5d7a;
+    text-align: center;
+    margin-top: 16px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px #ff5d7a66;
+  }
   .unanswered-warning {
     display: none;
     color: #ff5d7a;
@@ -322,23 +385,93 @@
     letter-spacing: 1px;
     text-shadow: 0 0 8px #ff5d7a66;
   }
+
+  /* ===== Social links ===== */
+  .social {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 26px;
+    flex-wrap: wrap;
+  }
+  .social a {
+    display: inline-flex;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--cyan);
+    border-radius: 12px;
+    background: var(--panel);
+    color: var(--cyan);
+    font-size: 1.35rem;
+    text-decoration: none;
+    box-shadow: 0 0 10px #00e5ff44;
+    transition: transform 0.12s, box-shadow 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .social a:hover {
+    transform: translateY(-3px);
+    color: var(--magenta);
+    border-color: var(--magenta);
+    box-shadow: 0 0 18px #ff3df077;
+  }
+
   footer {
     text-align: center;
-    color: #5a7d99;
+    color: var(--muted);
     font-size: 0.85rem;
-    margin-top: 36px;
+    margin: 36px auto 0;
     letter-spacing: 2px;
+    background: var(--panel);
+    border: 1px solid #3a5a7a;
+    border-radius: 12px;
+    padding: 12px 20px;
+    width: fit-content;
+    max-width: 100%;
   }
-  footer .b { color: var(--cyan); }
+  footer .b {
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.68rem;
+    color: #fff;
+    text-shadow: 0 0 8px var(--cyan), 0 0 16px var(--cyan);
+    letter-spacing: 1px;
+  }
+  footer .b em { font-style: normal; color: var(--cyan); }
+  footer .sep {
+    color: var(--gold);
+    text-shadow: 0 0 8px #ffc83d88;
+    margin: 0 8px;
+  }
+
+  /* ===== Desktop layout ===== */
+  @media (min-width: 860px) {
+    body { font-size: 18px; }
+    .container { max-width: 1000px; }
+    .brand .logo { height: 150px; }
+    header h1 { font-size: 2.2rem; }
+    header .sub { font-size: 1.05rem; }
+    .card { padding: 26px 32px; }
+    .opts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 16px;
+    }
+    .opts .option { margin-bottom: 0; }
+    #reviewList {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    #reviewList .review-item { margin-bottom: 0; }
+  }
 </style>
 </head>
 <body>
 <div class="container">
 
   <div class="brand">
-    <img class="logo" src="logo.png" alt="English for All — Rank Up">
-    <div class="name">ENGLISH <b>for ALL</b></div>
-    <div class="tag">Rank Up</div>
+    <img class="logo" src="logo.webp" onerror="this.onerror=null;this.src='logo.png'" alt="English for All — Rank Up">
   </div>
 
   <header>
@@ -349,12 +482,15 @@
   <div id="intro" class="card student-info">
     <div class="panel-title">★ INSTRUCCIONES</div>
     <p>Elige la mejor opción en cada pregunta. Si no estás seguro, marca la respuesta que te suene más natural. Sin diccionario y sin traductor: ¡queremos tu nivel real!</p>
-    <p class="es">Las preguntas están en inglés. El resultado es una estimación de tu nivel CEFR; una breve entrevista oral lo confirma.</p>
+    <div class="cefr-note"><b>¿Qué es el CEFR?</b> Es el Marco Común Europeo de Referencia: clasifica los idiomas en seis niveles, de A1 (principiante) a C2 (maestría). Las preguntas están en inglés; el resultado es una estimación y una breve entrevista oral lo confirma.</div>
+    <p class="es">Al enviar el test, tu nombre y tu resultado se comparten con el profesor para poder asesorarte.</p>
     <label for="studentName">Tu nombre</label>
     <input type="text" id="studentName" placeholder="e.g. María García">
     <div class="btn-row">
-      <button class="btn" onclick="startTest()">▶ START</button>
+      <button class="btn" id="startBtn" onclick="startTest()">▶ START</button>
       <span class="es">Pulsa para empezar</span>
+      <p class="attempts" id="attemptInfo"></p>
+      <p class="blocked" id="blockedMsg">⚠ Has alcanzado el límite de 3 intentos en este dispositivo.<br>Escríbeme por WhatsApp para una evaluación personalizada.</p>
     </div>
   </div>
 
@@ -377,21 +513,113 @@
     <div class="stars" id="starRow"></div>
     <p class="score" id="scoreText"></p>
     <div class="level-desc" id="levelDesc"></div>
+    <p class="rankup">RANK UP!</p>
+    <p class="rankup-sub">¡Practica un poco cada día y sube de nivel!</p>
+    <div class="contact-box">
+      <div class="panel-title">★ ¿LISTO PARA SUBIR DE NIVEL?</div>
+      <p>Reserva una <b>mini-consulta gratuita</b>: confirmamos tu nivel con una breve entrevista oral y te propongo un plan a tu medida. La vía más rápida es WhatsApp — tu resultado ya va incluido en el mensaje:</p>
+      <a class="btn wa-btn" id="waCta" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> ESCRÍBEME</a>
+      <p class="es" style="margin-top:12px">También me encuentras aquí:</p>
+      <div class="social mini">
+        <a class="so-ig" href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a class="so-li" href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a class="so-dc" href="#" onclick="return copyDiscord(this)" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+        <a class="so-mail" href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        <a class="so-tap" href="#" target="_blank" rel="noopener" aria-label="Taplink"><i class="fa-solid fa-link"></i></a>
+      </div>
+      <p class="es">Discord: daniel.s.20 · englishforall1990@gmail.com · englishforall.taplink.site</p>
+    </div>
     <div class="review-box">
       <div class="panel-title">★ REPASO · TUS FALLOS</div>
       <div id="reviewList"></div>
     </div>
-    <p class="rankup">RANK UP!</p>
-    <p class="rankup-sub">¡Practica un poco cada día y sube de nivel! Reserva una breve entrevista oral para confirmar tu resultado.</p>
     <div class="btn-row">
+      <button class="btn share-btn" id="shareBtn" onclick="shareResult()">📣 COMPARTIR</button>
       <button class="btn" onclick="location.reload()">↻ PLAY AGAIN</button>
     </div>
   </div>
 
-  <footer><span class="b">ENGLISH for ALL</span> · Rank Up · Test de nivel CEFR · Resultado orientativo</footer>
+  <div class="social" id="socialBar">
+    <a class="so-wa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+    <a class="so-ig" href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a class="so-li" href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+    <a class="so-dc" href="#" onclick="return copyDiscord(this)" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+    <a class="so-mail" href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+    <a class="so-tap" href="#" target="_blank" rel="noopener" aria-label="Taplink"><i class="fa-solid fa-link"></i></a>
+  </div>
+
+  <footer><span class="b">ENGLISH <em>for ALL</em></span><span class="sep">✦</span>Rank Up<span class="sep">✦</span>Test de nivel CEFR<span class="sep">✦</span>Resultado orientativo</footer>
 </div>
 
 <script>
+// ===== Result notifications (Formspree) =====
+// Create a free form at https://formspree.io, then paste its endpoint
+// here (e.g. "https://formspree.io/f/abcdwxyz") to get every result
+// emailed to you. Leave empty to disable.
+const FORM_ENDPOINT = "";
+
+// ===== Contact links =====
+const SOCIAL = {
+  whatsapp: "https://wa.me/541123709477",
+  instagram: "https://www.instagram.com/englishforall_dan/",
+  linkedin: "https://www.linkedin.com/in/daniel-s-6572926b/?locale=es",
+  discord: "daniel.s.20",
+  email: "englishforall1990@gmail.com",
+  taplink: "https://englishforall.taplink.site"
+};
+function copyDiscord(el) {
+  const icon = el.querySelector("i");
+  const done = () => {
+    icon.className = "fa-solid fa-check";
+    setTimeout(() => { icon.className = "fa-brands fa-discord"; }, 1500);
+  };
+  try { navigator.clipboard.writeText(SOCIAL.discord).then(done, done); } catch (e) { done(); }
+  return false;
+}
+(function initSocial() {
+  document.querySelectorAll(".so-wa").forEach(a => a.href = SOCIAL.whatsapp);
+  document.querySelectorAll(".so-ig").forEach(a => a.href = SOCIAL.instagram);
+  document.querySelectorAll(".so-li").forEach(a => a.href = SOCIAL.linkedin);
+  document.querySelectorAll(".so-mail").forEach(a => a.href = "mailto:" + SOCIAL.email);
+  document.querySelectorAll(".so-tap").forEach(a => a.href = SOCIAL.taplink);
+  document.querySelectorAll(".so-dc").forEach(a => a.title = "Discord: " + SOCIAL.discord + " (clic para copiar)");
+})();
+
+// ===== Attempt limit (per browser/device via localStorage) =====
+// Teacher bypass: open the page once with ?profe=rankup to unlock
+// unlimited attempts on that device. ?reset=1 clears the counter.
+const MAX_ATTEMPTS = 3;
+(function handleParams() {
+  try {
+    const p = new URLSearchParams(location.search);
+    if (p.get("profe") === "rankup") localStorage.setItem("efa_teacher", "1");
+    if (p.get("reset") === "1") localStorage.removeItem("efa_attempts");
+  } catch (e) {}
+})();
+function isTeacher() {
+  try { return localStorage.getItem("efa_teacher") === "1"; } catch (e) { return false; }
+}
+function getAttempts() {
+  try { return Number(localStorage.getItem("efa_attempts") || 0); } catch (e) { return 0; }
+}
+function addAttempt() {
+  if (isTeacher()) return;
+  try { localStorage.setItem("efa_attempts", getAttempts() + 1); } catch (e) {}
+}
+function refreshAttemptUI() {
+  if (isTeacher()) {
+    document.getElementById("attemptInfo").textContent = "MODO PROFE · INTENTOS ∞";
+    return;
+  }
+  const used = Math.min(getAttempts(), MAX_ATTEMPTS);
+  document.getElementById("attemptInfo").textContent = `INTENTOS: ${used} / ${MAX_ATTEMPTS}`;
+  if (used >= MAX_ATTEMPTS) {
+    document.getElementById("startBtn").style.display = "none";
+    document.getElementById("blockedMsg").style.display = "block";
+  }
+}
+refreshAttemptUI();
+
 // Each question: text, options, index of correct answer, Spanish feedback.
 // Ordered from A1 to C2 difficulty.
 const QUESTIONS = [
@@ -459,20 +687,47 @@ const LEVELS = [
     desc: "Comprendes prácticamente todo lo que lees o escuchas y te expresas de forma espontánea, muy fluida y precisa, incluso en situaciones complejas." }
 ];
 
+function shuffledIndices(n) {
+  const a = [...Array(n).keys()];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function startTest() {
+  if (!isTeacher() && getAttempts() >= MAX_ATTEMPTS) { refreshAttemptUI(); return; }
   const container = document.getElementById("questions");
   container.innerHTML = QUESTIONS.map((item, i) => `
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
       <h3><span class="qnum">${String(i + 1).padStart(2, "0")}</span>${item.q}</h3>
-      ${item.o.map((opt, j) => `
+      <div class="opts">
+      ${shuffledIndices(item.o.length).map(j => `
         <label class="option">
           <input type="radio" name="q${i}" value="${j}" onchange="updateProgress()">
-          <span>${opt}</span>
+          <span>${item.o[j]}</span>
         </label>`).join("")}
+      </div>
     </div>`).join("");
   document.getElementById("intro").style.display = "none";
   document.getElementById("test").style.display = "block";
   window.scrollTo({ top: 0 });
+}
+
+let lastShare = "";
+function shareResult() {
+  const url = "https://danielseoanelopez.github.io/CEFREXAM/";
+  if (navigator.share) {
+    navigator.share({ text: lastShare, url }).catch(() => {});
+  } else {
+    const btn = document.getElementById("shareBtn");
+    const done = () => {
+      btn.textContent = "✓ COPIADO";
+      setTimeout(() => { btn.textContent = "📣 COMPARTIR"; }, 1500);
+    };
+    try { navigator.clipboard.writeText(lastShare + " " + url).then(done, done); } catch (e) { done(); }
+  }
 }
 
 function answeredCount() {
@@ -502,6 +757,7 @@ function submitTest() {
     }
     return;
   }
+  addAttempt();
   const mistakes = [];
   QUESTIONS.forEach((item, i) => {
     const chosen = Number(document.querySelector(`input[name="q${i}"]:checked`).value);
@@ -521,6 +777,28 @@ function submitTest() {
     "⭐".repeat(result.stars) + `<span class="off">${"⭐".repeat(6 - result.stars)}</span>`;
   document.getElementById("scoreText").textContent = `PUNTUACIÓN: ${score} / ${QUESTIONS.length} — ${result.name}`;
   document.getElementById("levelDesc").textContent = result.desc;
+
+  // Pre-filled WhatsApp consultation message with the student's result
+  const waMsg = `¡Hola Daniel! Hice el English Level Test y mi resultado es ${result.level} (${result.name}), ${score}/${QUESTIONS.length}.` +
+    (name ? ` Soy ${name}.` : "") + " Me gustaría una mini-consulta.";
+  document.getElementById("waCta").href = SOCIAL.whatsapp + "?text=" + encodeURIComponent(waMsg);
+
+  // Share text for the COMPARTIR button
+  lastShare = `🏆 ¡Saqué ${result.level} (${result.name}) en el English Level Test de ENGLISH for ALL!`;
+
+  // Email the result to the teacher (only if FORM_ENDPOINT is configured)
+  if (FORM_ENDPOINT) {
+    fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre: name || "(sin nombre)",
+        nivel: `${result.level} (${result.name})`,
+        puntuacion: `${score}/${QUESTIONS.length}`,
+        fecha: new Date().toLocaleString("es-AR")
+      })
+    }).catch(() => {});
+  }
 
   // Review of mistakes with Spanish feedback
   const list = document.getElementById("reviewList");
