@@ -48,7 +48,56 @@
       linear-gradient(rgba(5, 5, 14, 0.68), rgba(5, 5, 14, 0.82)),
       url("nebula.webp") center / cover no-repeat;
   }
-  .container { max-width: 760px; margin: 0 auto; }
+  .container { max-width: 760px; margin: 0 auto; position: relative; z-index: 2; }
+
+  /* ===== Side arcade decorations (wide screens only) ===== */
+  .side-deco {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 110px;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    display: none;
+  }
+  .side-deco.left { left: 0; }
+  .side-deco.right { right: 0; }
+  .side-deco span {
+    position: absolute;
+    font-family: "Press Start 2P", monospace;
+    font-size: 0.8rem;
+    opacity: 0;
+    animation: floatUp linear infinite;
+    text-shadow: 0 0 8px currentColor;
+    will-change: transform, opacity;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(108vh) rotate(0deg); opacity: 0; }
+    12%  { opacity: 0.5; }
+    88%  { opacity: 0.5; }
+    100% { transform: translateY(-12vh) rotate(200deg); opacity: 0; }
+  }
+  @media (min-width: 1280px) { .side-deco { display: block; } }
+
+  /* ===== Mute toggle ===== */
+  .mute-btn {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 30;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 2px solid var(--cyan);
+    background: var(--panel);
+    color: var(--cyan);
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00e5ff44;
+    transition: box-shadow 0.15s, transform 0.1s;
+  }
+  .mute-btn:hover { transform: translateY(-2px); box-shadow: 0 0 16px #00e5ff88; }
 
   /* ===== Brand header ===== */
   .brand {
@@ -465,6 +514,9 @@
 </style>
 </head>
 <body>
+<div class="side-deco left" id="decoLeft"></div>
+<div class="side-deco right" id="decoRight"></div>
+<button class="mute-btn" id="muteBtn" onclick="toggleMute()" aria-label="Sonido">🔊</button>
 <div class="container">
 
   <div class="brand">
@@ -548,6 +600,86 @@
 </div>
 
 <script>
+// ===== Arcade juice: sound, confetti, side decorations =====
+let muted = false;
+try { muted = localStorage.getItem("efa_muted") === "1"; } catch (e) {}
+let audioCtx = null;
+function beep(freq, dur, vol) {
+  if (muted) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = "square";
+    o.frequency.value = freq;
+    g.gain.value = vol || 0.035;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+    o.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+function blip() { beep(660, 0.07); }
+function startBlip() { beep(523, 0.09); setTimeout(() => beep(784, 0.12), 90); }
+function victory() {
+  [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.18, 0.045), i * 110));
+}
+function toggleMute() {
+  muted = !muted;
+  try { localStorage.setItem("efa_muted", muted ? "1" : "0"); } catch (e) {}
+  document.getElementById("muteBtn").textContent = muted ? "🔇" : "🔊";
+  if (!muted) blip();
+}
+(function initMute() {
+  document.getElementById("muteBtn").textContent = muted ? "🔇" : "🔊";
+})();
+
+function confettiBurst() {
+  const c = document.createElement("canvas");
+  c.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50";
+  c.width = window.innerWidth; c.height = window.innerHeight;
+  document.body.appendChild(c);
+  const ctx = c.getContext("2d");
+  const colors = ["#00e5ff", "#ff3df0", "#9d4dff", "#ffc83d", "#ffffff"];
+  const parts = [];
+  for (let i = 0; i < 150; i++) {
+    parts.push({
+      x: c.width / 2, y: c.height / 3,
+      vx: (Math.random() - 0.5) * 13, vy: Math.random() * -15 - 4,
+      s: Math.random() * 6 + 4, c: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.4
+    });
+  }
+  let frame = 0;
+  (function anim() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    parts.forEach(p => {
+      p.vy += 0.35; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s);
+      ctx.restore();
+    });
+    if (++frame < 170) requestAnimationFrame(anim); else c.remove();
+  })();
+}
+
+(function initSideDeco() {
+  const items = ["★", "✦", "A1", "B2", "C1", "🎮", "🏆", "★", "✦", "🎧"];
+  const colors = ["#00e5ff", "#ff3df0", "#9d4dff", "#ffc83d"];
+  ["decoLeft", "decoRight"].forEach(id => {
+    const box = document.getElementById(id);
+    for (let i = 0; i < 8; i++) {
+      const s = document.createElement("span");
+      s.textContent = items[Math.floor(Math.random() * items.length)];
+      s.style.left = (10 + Math.random() * 70) + "%";
+      s.style.color = colors[Math.floor(Math.random() * colors.length)];
+      s.style.animationDuration = (14 + Math.random() * 12) + "s";
+      s.style.animationDelay = (-Math.random() * 22) + "s";
+      box.appendChild(s);
+    }
+  });
+})();
+
 // ===== Result notifications (Formspree) =====
 // Create a free form at https://formspree.io, then paste its endpoint
 // here (e.g. "https://formspree.io/f/abcdwxyz") to get every result
@@ -694,6 +826,7 @@ function shuffledIndices(n) {
 
 function startTest() {
   if (!isTeacher() && getAttempts() >= MAX_ATTEMPTS) { refreshAttemptUI(); return; }
+  startBlip();
   const container = document.getElementById("questions");
   container.innerHTML = QUESTIONS.map((item, i) => `
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
@@ -739,6 +872,7 @@ function updateProgress() {
   document.getElementById("progressFill").style.width = (n / QUESTIONS.length * 100) + "%";
   document.getElementById("progressLabel").textContent = `${n} / ${QUESTIONS.length}`;
   document.getElementById("warning").style.display = "none";
+  blip();
 }
 
 function submitTest() {
@@ -814,6 +948,8 @@ function submitTest() {
   document.getElementById("test").style.display = "none";
   document.getElementById("results").style.display = "block";
   window.scrollTo({ top: 0 });
+  victory();
+  confettiBurst();
 }
 </script>
 </body>
