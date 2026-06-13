@@ -352,6 +352,13 @@
     margin-top: 14px;
   }
   .wa-btn:hover { box-shadow: 0 0 22px #2fd36baa; }
+  .share-btn {
+    background: linear-gradient(180deg, #19b8d6, #0a6f93);
+    border-color: #9ff1ff;
+    box-shadow: 0 0 14px #19b8d677;
+    margin-right: 10px;
+  }
+  .share-btn:hover { box-shadow: 0 0 22px #19b8d6aa; }
   .social.mini { margin-top: 10px; margin-bottom: 8px; gap: 10px; }
   .social.mini a { width: 42px; height: 42px; font-size: 1.15rem; }
 
@@ -526,6 +533,7 @@
       <div id="reviewList"></div>
     </div>
     <div class="btn-row">
+      <button class="btn share-btn" id="shareBtn" onclick="shareResult()">📣 SHARE</button>
       <button class="btn" onclick="location.reload()">↻ PLAY AGAIN</button>
     </div>
   </div>
@@ -543,6 +551,12 @@
 </div>
 
 <script>
+// ===== Result notifications (Formspree) =====
+// Create a free form at https://formspree.io, then paste its endpoint
+// here (e.g. "https://formspree.io/f/abcdwxyz") to get every result
+// emailed to you. Leave empty to disable.
+const FORM_ENDPOINT = "";
+
 // ===== Contact links =====
 const SOCIAL = {
   whatsapp: "https://wa.me/541123709477",
@@ -672,6 +686,15 @@ const LEVELS = [
     desc: "Comprendes prácticamente todo lo que lees o escuchas y te expresas de forma espontánea, muy fluida y precisa, incluso en situaciones complejas." }
 ];
 
+function shuffledIndices(n) {
+  const a = [...Array(n).keys()];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function startTest() {
   if (!isTeacher() && getAttempts() >= MAX_ATTEMPTS) { refreshAttemptUI(); return; }
   const container = document.getElementById("questions");
@@ -679,16 +702,31 @@ function startTest() {
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
       <h3><span class="qnum">${String(i + 1).padStart(2, "0")}</span>${item.q}</h3>
       <div class="opts">
-      ${item.o.map((opt, j) => `
+      ${shuffledIndices(item.o.length).map(j => `
         <label class="option">
           <input type="radio" name="q${i}" value="${j}" onchange="updateProgress()">
-          <span>${opt}</span>
+          <span>${item.o[j]}</span>
         </label>`).join("")}
       </div>
     </div>`).join("");
   document.getElementById("intro").style.display = "none";
   document.getElementById("test").style.display = "block";
   window.scrollTo({ top: 0 });
+}
+
+let lastShare = "";
+function shareResult() {
+  const url = "https://danielseoanelopez.github.io/CEFREXAM/";
+  if (navigator.share) {
+    navigator.share({ text: lastShare, url }).catch(() => {});
+  } else {
+    const btn = document.getElementById("shareBtn");
+    const done = () => {
+      btn.textContent = "✓ COPIED";
+      setTimeout(() => { btn.textContent = "📣 SHARE"; }, 1500);
+    };
+    try { navigator.clipboard.writeText(lastShare + " " + url).then(done, done); } catch (e) { done(); }
+  }
 }
 
 function answeredCount() {
@@ -744,6 +782,23 @@ function submitTest() {
   const waMsg = `¡Hola Daniel! Hice el English Level Test y mi resultado es ${result.level} (${result.name}), ${score}/${QUESTIONS.length}.` +
     (name ? ` Soy ${name}.` : "") + " Me gustaría una mini-consulta.";
   document.getElementById("waCta").href = SOCIAL.whatsapp + "?text=" + encodeURIComponent(waMsg);
+
+  // Share text for the SHARE button
+  lastShare = `🏆 ¡Saqué ${result.level} (${result.name}) en el English Level Test de ENGLISH for ALL!`;
+
+  // Email the result to the teacher (only if FORM_ENDPOINT is configured)
+  if (FORM_ENDPOINT) {
+    fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre: name || "(sin nombre)",
+        nivel: `${result.level} (${result.name})`,
+        puntuacion: `${score}/${QUESTIONS.length}`,
+        fecha: new Date().toLocaleString("es-AR")
+      })
+    }).catch(() => {});
+  }
 
   // Review of mistakes with Spanish feedback
   const list = document.getElementById("reviewList");
