@@ -172,6 +172,14 @@
     letter-spacing: 1px;
   }
   .es { color: var(--muted); font-size: 0.85rem; }
+  .privacy-note {
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin-top: 10px;
+    opacity: 0.9;
+  }
+  .privacy-note i { color: var(--gold); margin-right: 4px; }
   .cefr-note {
     background: #00e5ff0d;
     border: 1px solid var(--cyan);
@@ -567,6 +575,7 @@
       <div class="panel-title">★ ¿LISTO PARA SUBIR DE NIVEL?</div>
       <p>Reserva una <b>mini-consulta gratuita</b>: confirmamos tu nivel con una breve entrevista oral y te propongo un plan a tu medida. La vía más rápida es WhatsApp — tu resultado ya va incluido en el mensaje:</p>
       <a class="btn wa-btn" id="waCta" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> ESCRÍBEME</a>
+      <p class="privacy-note"><i class="fa-solid fa-lock"></i> Tu resultado se envía de forma privada únicamente a tu tutor (Daniel). No se comparte con nadie más.</p>
       <p class="es" style="margin-top:12px">También me encuentras aquí:</p>
       <div class="social mini">
         <a class="so-ig" href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
@@ -680,15 +689,17 @@ function confettiBurst() {
   });
 })();
 
-// ===== Result notifications (Formspree) =====
-// Create a free form at https://formspree.io, then paste its endpoint
-// here (e.g. "https://formspree.io/f/abcdwxyz") to get every result
-// emailed to you. Leave empty to disable.
-const FORM_ENDPOINT = "";
+// ===== Lead logger =====
+// This powers the "tu resultado se envía a tu tutor" promise on the results
+// screen. To ACTIVATE: create a free form at https://formspree.io and paste
+// its endpoint between the quotes below (e.g. "https://formspree.io/f/abcdwxyz").
+// Every result (name, level, score, date) is then sent privately to your inbox.
+// Leave empty to disable.
+const FORM_ENDPOINT = "https://formspree.io/f/mbdewbrp";
 
 // ===== Contact links =====
 const SOCIAL = {
-  whatsapp: "https://wa.me/541123709477",
+  whatsapp: "https://wa.me/5491123709477",
   instagram: "https://www.instagram.com/englishforall_dan/",
   linkedin: "https://www.linkedin.com/in/daniel-s-6572926b/?locale=es",
   discord: "daniel.s.20",
