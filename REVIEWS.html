@@ -104,11 +104,9 @@
   footer .sep { color: var(--gold); text-shadow: 0 0 8px #ffc83d88; margin: 0 8px; }
 
   @media (min-width: 860px) { body { font-size: 18px; } .container { max-width: 1000px; } .brand .logo { height: 150px; } header h1 { font-size: 2.2rem; } }
-  #tsparticles { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
 </style>
 </head>
 <body>
-<div id="tsparticles"></div>
 <div class="side-deco left" id="decoLeft"></div>
 <div class="side-deco right" id="decoRight"></div>
 <div class="container">
@@ -207,7 +205,6 @@
   })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@3/tsparticles.slim.bundle.min.js"></script>
 <script>
   // Reveal-on-scroll (light fallback: if AOS fails to load, show everything)
   try {
@@ -219,23 +216,6 @@
   } catch (e) {
     document.querySelectorAll("[data-aos]").forEach(function (el) { el.removeAttribute("data-aos"); });
   }
-  // Animated particle background — lighter on mobile, richer on desktop
-  try {
-    var mob = window.matchMedia("(max-width: 768px)").matches;
-    tsParticles.load({ id: "tsparticles", options: {
-      fpsLimit: mob ? 30 : 60,
-      particles: {
-        number: { value: mob ? 60 : 150 },
-        color: { value: ["#00e5ff", "#ff3df0", "#9d4dff", "#ffffff"] },
-        links: { enable: !mob, color: "#00e5ff", opacity: 0.28, distance: 150, width: 1 },
-        move: { enable: true, speed: mob ? 0.3 : 0.6 },
-        size: { value: { min: 1.4, max: mob ? 2.6 : 3.6 } },
-        opacity: { value: { min: 0.5, max: mob ? 0.75 : 1 } }
-      },
-      interactivity: { detectsOn: "window", events: { onHover: { enable: true, mode: ["grab", "bubble"] }, onClick: { enable: true, mode: "push" } }, modes: { grab: { distance: 180, links: { opacity: 0.8, color: "#00e5ff" } }, bubble: { distance: 180, size: 6, opacity: 1, duration: 2 }, push: { quantity: 4 } } },
-      detectRetina: true
-    }});
-  } catch (e) {}
 </script>
 </body>
 </html>
