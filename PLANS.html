@@ -60,7 +60,7 @@
   .plan.m .pname { text-shadow: 0 0 12px rgba(157,77,255,0.5); }
   .plan.pop .pname { text-shadow: 0 0 12px rgba(255,200,61,0.5); }
   .pquote { color: var(--muted); font-style: italic; font-size: 0.95rem; margin: 2px 0 14px; text-align: center; }
-  .focus { display: flex; gap: 10px; font-size: 1rem; color: var(--text); background: #00e5ff0d; border: 1px solid var(--cyan); border-radius: 10px; padding: 12px 14px; box-shadow: 0 0 8px #00e5ff22; }
+  .focus { display: flex; align-items: center; gap: 10px; font-size: 1rem; color: var(--text); background: #00e5ff0d; border: 1px solid var(--cyan); border-radius: 10px; padding: 12px 14px; box-shadow: 0 0 8px #00e5ff22; min-height: 100px; }
   .plan.m .focus { background: #9d4dff0d; border-color: var(--purple); box-shadow: 0 0 8px #9d4dff22; }
   .plan.pop .focus { background: #ffc83d0d; border-color: var(--gold); box-shadow: 0 0 8px #ffc83d22; }
   .focus i { color: var(--cyan); margin-top: 3px; }
@@ -68,6 +68,7 @@
   .lbl { font-size: 0.82rem; letter-spacing: 1.5px; color: var(--cyan); margin: 16px 0 8px; text-transform: uppercase; text-shadow: 0 0 6px #00e5ff55; }
   .plan.m .lbl { color: var(--purple); } .plan.pop .lbl { color: var(--gold); }
   ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .plan ul:first-of-type { min-height: 70px; }
   li { display: flex; gap: 10px; font-size: 1rem; color: var(--text); line-height: 1.45; }
   li i { color: #3dffa0; margin-top: 4px; font-size: 0.85rem; filter: drop-shadow(0 0 4px #3dffa066); }
   .spacer { flex: 1; }
