@@ -104,7 +104,7 @@
   footer .sep { color: var(--gold); text-shadow: 0 0 8px #ffc83d88; margin: 0 8px; }
 
   @media (min-width: 860px) { body { font-size: 18px; } .container { max-width: 1000px; } .brand .logo { height: 150px; } header h1 { font-size: 2.2rem; } }
-  #tsparticles { position: fixed; inset: 0; z-index: -1; }
+  #tsparticles { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -225,14 +225,14 @@
     tsParticles.load({ id: "tsparticles", options: {
       fpsLimit: mob ? 30 : 60,
       particles: {
-        number: { value: mob ? 34 : 95 },
+        number: { value: mob ? 60 : 150 },
         color: { value: ["#00e5ff", "#ff3df0", "#9d4dff", "#ffffff"] },
-        links: { enable: !mob, color: "#00e5ff", opacity: 0.22, distance: 145, width: 1 },
+        links: { enable: !mob, color: "#00e5ff", opacity: 0.28, distance: 150, width: 1 },
         move: { enable: true, speed: mob ? 0.3 : 0.6 },
-        size: { value: { min: 1, max: mob ? 2.2 : 3 } },
-        opacity: { value: { min: 0.35, max: mob ? 0.7 : 0.95 } }
+        size: { value: { min: 1.4, max: mob ? 2.6 : 3.6 } },
+        opacity: { value: { min: 0.5, max: mob ? 0.75 : 1 } }
       },
-      interactivity: { detectsOn: "window", events: { onHover: { enable: true, mode: ["grab", "bubble"] }, onClick: { enable: true, mode: "push" } }, modes: { grab: { distance: 180, links: { opacity: 0.7, color: "#00e5ff" } }, bubble: { distance: 180, size: 5, opacity: 1, duration: 2 }, push: { quantity: 3 } } },
+      interactivity: { detectsOn: "window", events: { onHover: { enable: true, mode: ["grab", "bubble"] }, onClick: { enable: true, mode: "push" } }, modes: { grab: { distance: 180, links: { opacity: 0.8, color: "#00e5ff" } }, bubble: { distance: 180, size: 6, opacity: 1, duration: 2 }, push: { quantity: 4 } } },
       detectRetina: true
     }});
   } catch (e) {}
