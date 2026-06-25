@@ -94,6 +94,16 @@
 
   .note { text-align: center; color: var(--muted); font-size: 0.92rem; margin-top: 24px; letter-spacing: 1px; }
   .note a { color: var(--cyan); text-shadow: 0 0 8px #00e5ff55; }
+  .rankup { font-family: "Press Start 2P", monospace; font-size: clamp(1rem, 4vw, 1.4rem); text-align: center; margin: 34px 0 4px; background: linear-gradient(90deg, var(--magenta), var(--purple), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px #ff3df066); }
+  .rankup-sub { text-align: center; color: var(--muted); font-size: 0.95rem; letter-spacing: 1px; margin-bottom: 14px; }
+  .contact-box { background: #00e5ff0d; border: 1px solid var(--cyan); border-radius: 12px; padding: 22px 20px; margin: 4px 0 4px; box-shadow: 0 0 10px #00e5ff22; text-align: center; }
+  .contact-box .panel-title { font-family: "Press Start 2P", monospace; font-size: 0.78rem; letter-spacing: 1px; color: #fff; text-shadow: 0 0 6px var(--cyan); margin-bottom: 12px; }
+  .contact-box b { color: var(--gold); }
+  .contact-box .btn { display: inline-flex; width: auto; padding: 15px 24px; font-size: 0.72rem; margin: 8px 6px 0; }
+  .wa-btn { background: linear-gradient(180deg, #2fd36b, #128c5e); border-color: #8af2b5; box-shadow: 0 0 14px #2fd36b77; color: #fff; text-shadow: 0 0 6px #000; }
+  .wa-btn:hover { box-shadow: 0 0 22px #2fd36baa; }
+  .test-btn { background: linear-gradient(180deg, var(--cyan), #0a6f93); border-color: #9ff1ff; box-shadow: 0 0 14px #19b8d677; color: #fff; text-shadow: 0 0 6px #000; }
+  .test-btn:hover { box-shadow: 0 0 22px #19b8d6aa; }
   .social { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 24px; }
   .contact-note { text-align: center; color: var(--muted); font-size: 0.82rem; letter-spacing: 1px; margin-top: 12px; }
   .social a { display: inline-flex; width: 48px; height: 48px; align-items: center; justify-content: center; border: 2px solid var(--cyan); border-radius: 12px; background: var(--panel); color: var(--cyan); font-size: 1.35rem; text-decoration: none; box-shadow: 0 0 10px #00e5ff44; transition: transform 0.12s, box-shadow 0.15s, color 0.15s, border-color 0.15s; }
@@ -179,7 +189,16 @@
 
   </div>
 
-  <p class="note">¿No sabes cuál elegir? Reserva tu <b style="color:#ffc83d">clase de prueba</b> y te propongo el plan a tu medida: <a href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" style="color:#ffc83d;text-shadow:0 0 6px #ffc83d55">agenda por Google Meet</a> o <a href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Quiero%20que%20me%20recomiendes%20un%20plan%20seg%C3%BAn%20mi%20nivel.%20%C2%A1Gracias%21">escríbeme por WhatsApp</a>. &middot; ¿No sabes tu nivel? <a href="index.html">Haz el test de nivel gratis →</a></p>
+  <div class="rankup" data-aos="fade-up">RANK UP!</div>
+  <p class="rankup-sub" data-aos="fade-up">Ahora es tu turno.</p>
+
+  <div class="contact-box" data-aos="fade-up">
+    <div class="panel-title">¿LISTO PARA COMENZAR?</div>
+    <p>Reserva tu <b>clase de prueba</b> y empieza a subir de nivel tu inglés.</p>
+    <a class="btn wa-btn" href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Quiero%20reservar%20una%20clase%20de%20prueba.%20%C2%A1Gracias%21"><i class="fa-brands fa-whatsapp"></i> ESCRÍBEME</a>
+    <a class="btn" href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#ffd45e,#e8a317);border-color:#ffe08a;box-shadow:0 0 14px #ffc83d77;color:#fff;text-shadow:0 0 6px #000"><i class="fa-solid fa-calendar-check"></i> RESERVAR CLASE DE PRUEBA</a>
+    <a class="btn test-btn" href="index.html"><i class="fa-solid fa-gamepad"></i> TEST DE NIVEL</a>
+  </div>
 
   <div class="social">
     <a href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Te%20escribo%20desde%20la%20web%20de%20English%20for%20All.%20Quiero%20m%C3%A1s%20info%20para%20subir%20de%20nivel.%20%C2%A1Gracias%21" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
