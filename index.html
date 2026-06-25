@@ -566,7 +566,7 @@
       <button class="btn" id="startBtn" onclick="startTest()">▶ START</button>
       <span class="es">Pulsa para empezar</span>
       <p class="attempts" id="attemptInfo"></p>
-      <p class="blocked" id="blockedMsg">⚠ Has alcanzado el límite de 3 intentos en este dispositivo.<br>Escríbeme por WhatsApp para una evaluación personalizada.</p>
+      <p class="blocked" id="blockedMsg">⚠ Has alcanzado el límite de 3 intentos en este dispositivo.<br>Escribime por WhatsApp para reservar tu clase de prueba.</p>
     </div>
   </div>
 
@@ -603,7 +603,7 @@
     <p class="rankup-sub">¡Practica un poco cada día y sube de nivel!</p>
     <div class="contact-box">
       <div class="panel-title">★ ¿LISTO PARA SUBIR DE NIVEL?</div>
-      <p>Reserva una <b>mini-consulta gratuita</b>: confirmamos tu nivel con una breve entrevista oral y te propongo un plan a tu medida. La vía más rápida es WhatsApp — tu resultado ya va incluido en el mensaje:</p>
+      <p>Reservá tu <b>clase de prueba gratis</b>: confirmamos tu nivel y te propongo un plan a tu medida. Escribime por WhatsApp (tu resultado ya va en el mensaje) o reservá directamente:</p>
       <a class="btn wa-btn" id="waCta" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> ESCRIBIME</a>
       <a class="btn" id="bookCta" href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#ffd45e,#e8a317);border-color:#ffe08a;box-shadow:0 0 14px #ffc83d77;color:#fff;text-shadow:0 0 6px #000;margin-top:12px"><i class="fa-solid fa-calendar-check"></i> RESERVAR CLASE DE PRUEBA</a>
       <p class="privacy-note"><i class="fa-solid fa-lock"></i> Tu resultado se envía de forma privada únicamente a tu tutor (Daniel). No se comparte con nadie más.</p>
@@ -637,6 +637,7 @@
     <a class="so-tap" href="#" target="_blank" rel="noopener" aria-label="Taplink"><i class="fa-solid fa-link"></i></a>
   </div>
 
+  <p class="es" style="text-align:center;max-width:640px;margin:6px auto 18px;line-height:1.6">¿Listo para empezar? Reservá tu <b style="color:var(--gold)">clase de prueba gratis</b>: <a href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" style="color:var(--gold)">agendá por Google Meet</a> o <a href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Quiero%20reservar%20una%20clase%20de%20prueba%20gratis.%20%C2%A1Gracias%21" target="_blank" rel="noopener" style="color:var(--cyan)">escribime por WhatsApp</a>.</p>
   <footer><span class="b">ENGLISH <em>for ALL</em></span><span class="sep">✦</span>Rank Up<span class="sep">✦</span>Test de nivel CEFR<span class="sep">✦</span>Resultado orientativo</footer>
 </div>
 
@@ -986,7 +987,7 @@ function submitTest() {
 
   // Pre-filled WhatsApp consultation message with the student's result
   const waMsg = `Hey, ¡Hola Dan! Hice el English Level Test y me dio ${result.level} (${result.name}), ${score}/${QUESTIONS.length}.` +
-    (name ? ` Soy ${name}.` : "") + " Me gustaría una mini-consulta gratis. ¡Gracias!";
+    (name ? ` Soy ${name}.` : "") + " Me gustaría una clase de prueba gratis. ¡Gracias!";
   document.getElementById("waCta").href = SOCIAL.whatsapp + "?text=" + encodeURIComponent(waMsg);
   document.getElementById("spkCta").href = SOCIAL.whatsapp + "?text=" + encodeURIComponent(`Hey, ¡Hola Dan! Te mando mis 3 audios del Speaking Challenge. En el test me dio ${result.level}. ¡Gracias!`);
 
