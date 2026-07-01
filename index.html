@@ -819,21 +819,21 @@ const QUESTIONS = [
   // B1
   { q: "I've lived in this city ____ 2015.", o: ["for", "since", "during", "from"], a: 1,
     fb: "'Since' + momento concreto (2015); 'for' + duración (for 10 years)." },
-  { q: "If it rains tomorrow, we ____ at home.", o: ["stayed", "would stay", "will stay", "would have stayed"], a: 2,
-    fb: "Primera condicional: if + presente simple, will + infinitivo." },
+  { q: "If it rains tomorrow, we ____ at home.", o: ["stayed", "would have staid", "will stay", "would have stayed"], a: 2,
+    fb: "Primera condicional: if + presente simple, will + infinitivo. Ojo: 'staid' es un error de ortografía — el pasado de 'stay' es 'stayed'." },
   { q: "You ____ smoke in the hospital. It's forbidden.", o: ["don't have to", "mustn't", "shouldn't have", "couldn't"], a: 1,
     fb: "'Mustn't' = prohibición. 'Don't have to' significa que no es necesario." },
   // B2
-  { q: "By the time we arrived, the concert ____.", o: ["already started", "has already started", "had already started", "would already start"], a: 2,
-    fb: "Past perfect ('had already started') para una acción terminada antes de otra acción pasada." },
-  { q: "I'd rather you ____ tell anyone about this.", o: ["don't", "didn't", "won't", "not to"], a: 1,
-    fb: "'I'd rather you' + pasado simple, aunque hablemos del presente o futuro." },
+  { q: "By the time we arrived, the concert ____.", o: ["was already started", "has already start", "had already started", "would already start"], a: 2,
+    fb: "Past perfect ('had already started') para una acción terminada antes de otra acción pasada. 'By the time' + pasado pide past perfect, no pasiva ni presente perfecto." },
+  { q: "I'd rather you ____ tell anyone about this.", o: ["doesn't", "didn't", "won't", "not to"], a: 1,
+    fb: "'I'd rather you' + pasado simple ('didn't'), aunque hablemos del presente o futuro." },
   { q: "The new bridge ____ by the end of next year.", o: ["will have been built", "will be building", "is building", "will have building"], a: 0,
     fb: "Futuro perfecto en pasiva: 'will have been built' (habrá sido construido)." },
   // C1
-  { q: "____ had I closed the door when the alarm went off.", o: ["Rarely", "No sooner", "Hardly", "Only"], a: 2,
-    fb: "Inversión formal: 'Hardly had I... when...'. ('No sooner' iría con 'than')." },
-  { q: "The proposal was rejected ____ its potential benefits.", o: ["despite of", "notwithstanding", "however", "even"], a: 1,
+  { q: "____ had I closed the door when the alarm went off.", o: ["Rarely", "Suddenly", "Hardly", "Only"], a: 2,
+    fb: "Inversión formal: 'Hardly had I... when...' (también 'Scarcely/Barely... when'). 'Suddenly' nunca provoca inversión." },
+  { q: "The proposal was rejected ____ its potential benefits.", o: ["despite of", "notwithstanding", "however", "moreover"], a: 1,
     fb: "'Notwithstanding' = a pesar de (formal). Ojo: 'despite' nunca lleva 'of'." },
   // C2
   { q: "Little ____ that the decision would change her life entirely.", o: ["she knew", "did she know", "she did know", "knew she"], a: 1,
@@ -846,11 +846,11 @@ const QUESTIONS = [
   { q: "What's the problem with the train?", o: ["It's cancelled", "It's 20 minutes late", "It left early", "It's full"], a: 1,
     fb: "'delayed by twenty minutes' = retrasado 20 minutos.", audio: "listen2.mp3", listen: true },
   { q: "Why hasn't Tom sent the report?", o: ["He hasn't written his part yet", "He's still waiting for figures from Marketing", "He already sent it this morning", "He's waiting for his manager's approval"], a: 1,
-    fb: "Tom ya escribió su parte ('the writing's all finished'); lo que falta son las cifras de Marketing ('I can't send it off until Marketing gives me their sales figures').", audio: "listen3.mp3", listen: true },
+    fb: "Tom ya escribió el informe ('finished writing the whole thing') y su manager ya lo aprobó ('signed off'); lo único que falta son las cifras de Marketing ('I still need their final sales figures').", audio: "listen3.mp3", listen: true },
   { q: "What's the speaker's overall view of working from home?", o: ["She'd happily go back to the office full-time", "She has doubts but still prefers working from home", "She thinks working from home has no downsides", "She finds she's less productive at home"], a: 1,
-    fb: "Da pros y contras, pero remata: si la obligaran a volver a la oficina, buscaría otro trabajo → prefiere el teletrabajo a pesar de las pegas.", audio: "listen4.mp3", listen: true },
+    fb: "Da pros y contras (y ojo: los que volvieron a la oficina son sus COLEGAS, no ella), pero remata: si la obligaran a volver, 'I'd have my CV out by the weekend' → prefiere el teletrabajo a pesar de las pegas.", audio: "listen4.mp3", listen: true },
   { q: "What's the speaker implying about the merger?", o: ["The merger was planned long before it was announced", "Nobody in the company saw the merger coming", "The merger happened by accident, with no real planning", "The merger was a bad decision for the company"], a: 0,
-    fb: "Idiomas: 'the writing was on the wall' (se veía venir) y rechaza el 'bolt from the blue' (sorpresa total). Da a entender que ya estaba decidido hacía meses; solo sorprendió la rapidez ('how fast they pulled the trigger').", audio: "listen5.mp3", listen: true }
+    fb: "Idiomas: 'the writing had been on the wall' (se veía venir desde hacía meses) y rechaza el 'bolt from the blue' (sorpresa total). El 'nobody knew a thing' inicial es la trampa: es la versión OFICIAL, que él desmonta con la cadena de pistas. Solo sorprendió la rapidez ('pulled the trigger... within a week').", audio: "listen5.mp3", listen: true }
 ];
 
 // Score bands → CEFR level (stars = rank out of 6)
@@ -896,7 +896,7 @@ function startTest() {
     // ?v=N busts the browser/GitHub-Pages cache when audio is re-generated under the
     // same filename. BUMP THIS NUMBER whenever you re-run generate_listening.py.
     const player = item.audio
-      ? `<audio controls preload="none" src="${item.audio}?v=3" style="width:100%;height:42px;margin:2px 0 12px;filter:drop-shadow(0 0 6px #00e5ff55)"></audio>`
+      ? `<audio controls preload="none" src="${item.audio}?v=4" style="width:100%;height:42px;margin:2px 0 12px;filter:drop-shadow(0 0 6px #00e5ff55)"></audio>`
       : "";
     return `${divider}
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
