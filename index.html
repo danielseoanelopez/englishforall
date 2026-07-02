@@ -603,15 +603,15 @@
       <p class="es" style="margin-top:6px">🟡 <b>2 · Describe:</b> Describe your typical day at work or study. What's easy or hard for you about using English?</p>
       <p class="es" style="margin-top:6px">🔴 <b>3 · Challenge:</b> Explain how a tool or process in your job works — or give your opinion: will AI make learning English easier or harder? Give reasons.</p>
       <p class="es" style="margin-top:10px">💡 Habla natural, sin leer. Si un nivel te cuesta, ¡está perfecto! Eso también me dice dónde estás.</p>
-      <div class="btn-row" style="margin-top:14px"><a class="btn wa-btn" id="spkCta" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> ENVIAR MIS 3 AUDIOS</a></div>
+      <div class="btn-row" style="margin-top:14px"><a class="btn wa-btn" id="spkCta" href="#" target="_blank" rel="noopener" onclick="gcEvent('cta-speaking-audios')"><i class="fa-brands fa-whatsapp"></i> ENVIAR MIS 3 AUDIOS</a></div>
     </div>
     <p class="rankup">RANK UP!</p>
     <p class="rankup-sub">¡Practica un poco cada día y sube de nivel!</p>
     <div class="contact-box">
       <div class="panel-title">★ ¿LISTO PARA SUBIR DE NIVEL?</div>
       <p>Reserva tu <b>clase de prueba</b>: confirmamos tu nivel y te propongo un plan a tu medida. <span style="color:#2fd36b">Escríbeme por WhatsApp</span> (tu resultado ya va en el mensaje) o reserva directamente:</p>
-      <a class="btn wa-btn" id="waCta" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> ESCRÍBEME</a>
-      <a class="btn" id="bookCta" href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#ffd45e,#e8a317);border-color:#ffe08a;box-shadow:0 0 14px #ffc83d77;color:#fff;text-shadow:0 0 6px #000;margin-top:12px"><i class="fa-solid fa-calendar-check"></i> RESERVAR CLASE DE PRUEBA</a>
+      <a class="btn wa-btn" id="waCta" href="#" target="_blank" rel="noopener" onclick="gcEvent('cta-whatsapp-escribeme')"><i class="fa-brands fa-whatsapp"></i> ESCRÍBEME</a>
+      <a class="btn" id="bookCta" href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" onclick="gcEvent('cta-calendly-reserva')" style="background:linear-gradient(180deg,#ffd45e,#e8a317);border-color:#ffe08a;box-shadow:0 0 14px #ffc83d77;color:#fff;text-shadow:0 0 6px #000;margin-top:12px"><i class="fa-solid fa-calendar-check"></i> RESERVAR CLASE DE PRUEBA</a>
       <p class="privacy-note"><i class="fa-solid fa-lock"></i> Tu resultado se envía de forma privada únicamente a tu tutor (Daniel). No se comparte con nadie más.</p>
       <p class="es" style="margin-top:10px"><a href="REVIEWS.html" style="color:var(--cyan);text-shadow:0 0 6px #00e5ff55">› Casos de éxito</a> &middot; <a href="PLANS.html" style="color:var(--cyan);text-shadow:0 0 6px #00e5ff55">Planes y precios</a></p>
       <p class="es" style="margin-top:12px">También me encuentras aquí:</p>
@@ -645,7 +645,7 @@
     <a class="so-tap" href="#" target="_blank" rel="noopener" aria-label="Taplink"><i class="fa-solid fa-link"></i></a>
   </div>
 
-  <p class="es" style="text-align:center;max-width:640px;margin:6px auto 18px;line-height:1.6">¿Listo para empezar? Reserva tu <b style="color:var(--gold)">clase de prueba</b>: <a href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" style="color:var(--gold)">agenda por Google Meet</a> o <a href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Quiero%20reservar%20una%20clase%20de%20prueba.%20%C2%A1Gracias%21" target="_blank" rel="noopener" style="color:#2fd36b">escríbeme por WhatsApp</a>.</p>
+  <p class="es" style="text-align:center;max-width:640px;margin:6px auto 18px;line-height:1.6">¿Listo para empezar? Reserva tu <b style="color:var(--gold)">clase de prueba</b>: <a href="https://calendly.com/daniel-seoane-lopez/trial" target="_blank" rel="noopener" onclick="gcEvent('cta-calendly-footer')" style="color:var(--gold)">agenda por Google Meet</a> o <a href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Quiero%20reservar%20una%20clase%20de%20prueba.%20%C2%A1Gracias%21" target="_blank" rel="noopener" onclick="gcEvent('cta-whatsapp-footer')" style="color:#2fd36b">escríbeme por WhatsApp</a>.</p>
   <footer><span class="b">ENGLISH <em>for ALL</em></span><span class="sep">✦</span>Rank Up<span class="sep">✦</span>Test de nivel CEFR<span class="sep">✦</span>Resultado orientativo</footer>
 </div>
 
@@ -729,6 +729,12 @@ function confettiBurst() {
     }
   });
 })();
+
+// ===== GoatCounter events (funnel: visita -> start -> finish -> clic CTA) =====
+// Aparecen en el panel de GoatCounter como rutas "test-..."/"cta-..." (event=true).
+function gcEvent(name) {
+  try { if (window.goatcounter && goatcounter.count) goatcounter.count({ path: name, title: name, event: true }); } catch (e) {}
+}
 
 // ===== Lead logger =====
 // This powers the "tu resultado se envía a tu tutor" promise on the results
@@ -967,6 +973,7 @@ function startTest() {
       if (el) { el.checked = true; restored++; }
     }
   }
+  gcEvent(restored > 0 ? "test-resume" : "test-start");
   document.getElementById("intro").style.display = "none";
   document.getElementById("test").style.display = "block";
   if (restored > 0) {
@@ -1028,6 +1035,7 @@ function submitTest() {
   }
   addAttempt();
   clearProgress();
+  gcEvent("test-finish");
   const mistakes = [];
   QUESTIONS.forEach((item, i) => {
     const chosen = Number(document.querySelector(`input[name="q${i}"]:checked`).value);
