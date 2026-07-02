@@ -565,12 +565,12 @@
     <p>Elige la mejor opción en cada pregunta. Si de verdad no la sabes, marca <b>«No lo sé»</b> — es mejor que adivinar, así tu nivel sale más preciso. Sin diccionario y sin traductor: ¡queremos tu nivel real! Las últimas <b>5 preguntas son de listening</b> (audio) — usa auriculares si puedes. 🎧</p>
     <div class="cefr-note"><b>¿Qué es el CEFR?</b> Es el Marco Común Europeo de Referencia: clasifica los idiomas en seis niveles, de A1 (principiante) a C2 (maestría). Las preguntas están en inglés; el resultado es una estimación y una breve entrevista oral lo confirma.</div>
     <label for="studentName">Tu nombre</label>
-    <input type="text" id="studentName" placeholder="e.g. María García">
+    <input type="text" id="studentName" placeholder="e.g. María García" oninput="saveProgress()">
     <label for="studentContact">Tu WhatsApp o email <span style="color:var(--muted);text-transform:none;letter-spacing:0;font-size:0.8rem">(opcional — para enviarte tu resultado y un mini-plan)</span></label>
-    <input type="text" id="studentContact" placeholder="e.g. +54 9 11 2345-6789 · tu@email.com">
+    <input type="text" id="studentContact" placeholder="e.g. +54 9 11 2345-6789 · tu@email.com" oninput="saveProgress()">
     <div class="btn-row">
       <button class="btn" id="startBtn" onclick="startTest()">▶ START</button>
-      <span class="es">Pulsa para empezar</span>
+      <span class="es" id="startHint">Pulsa para empezar</span>
       <p class="attempts" id="attemptInfo"></p>
       <p class="blocked" id="blockedMsg">⚠ Has alcanzado el límite de 3 intentos en este dispositivo.<br><span style="color:#2fd36b">Escríbeme por WhatsApp</span> para reservar tu clase de prueba.</p>
     </div>
@@ -775,7 +775,7 @@ const MAX_ATTEMPTS = 3;
   try {
     const p = new URLSearchParams(location.search);
     if (p.get("profe") === "rankup") localStorage.setItem("efa_teacher", "1");
-    if (p.get("reset") === "1") localStorage.removeItem("efa_attempts");
+    if (p.get("reset") === "1") { localStorage.removeItem("efa_attempts"); localStorage.removeItem("efa_progress"); }
     const period = new Date().getFullYear() + "-" + (new Date().getMonth() + 1);
     if (localStorage.getItem("efa_period") !== period) { localStorage.setItem("efa_period", period); localStorage.setItem("efa_attempts", "0"); }
   } catch (e) {}
@@ -803,6 +803,45 @@ function refreshAttemptUI() {
   }
 }
 refreshAttemptUI();
+
+// ===== Autosave (no perder respuestas si se cierra el navegador) =====
+// Bump TEST_VERSION whenever the QUESTIONS array changes -> stale saved
+// answers are discarded instead of mapping onto the wrong options.
+const TEST_VERSION = 1;
+function saveProgress() {
+  try {
+    const answers = {};
+    document.querySelectorAll('#questions input[type=radio]:checked').forEach(el => {
+      answers[el.name.slice(1)] = el.value;
+    });
+    localStorage.setItem("efa_progress", JSON.stringify({
+      v: TEST_VERSION, ts: Date.now(),
+      name: document.getElementById("studentName").value,
+      contact: document.getElementById("studentContact").value,
+      answers
+    }));
+  } catch (e) {}
+}
+function loadProgress() {
+  try {
+    const p = JSON.parse(localStorage.getItem("efa_progress"));
+    if (!p || p.v !== TEST_VERSION) return null;
+    if (Date.now() - p.ts > 24 * 60 * 60 * 1000) return null; // caducado (24 h)
+    return p;
+  } catch (e) { return null; }
+}
+function clearProgress() { try { localStorage.removeItem("efa_progress"); } catch (e) {} }
+(function initResume() {
+  const saved = loadProgress();
+  if (!saved) return;
+  if (saved.name && !document.getElementById("studentName").value) document.getElementById("studentName").value = saved.name;
+  if (saved.contact && !document.getElementById("studentContact").value) document.getElementById("studentContact").value = saved.contact;
+  const n = Object.keys(saved.answers || {}).length;
+  if (n > 0) {
+    document.getElementById("startBtn").textContent = "▶ CONTINUAR";
+    document.getElementById("startHint").textContent = `Tienes un test empezado (${n} respuestas guardadas) — continúa donde lo dejaste`;
+  }
+})();
 
 // Each question: text, options, index of correct answer, Spanish feedback.
 // Ordered from A1 to C2 difficulty.
@@ -919,9 +958,28 @@ function startTest() {
       </label>
     </div>`;
   }).join("");
+  // Restore autosaved answers (if any) and jump to the first unanswered question
+  const saved = loadProgress();
+  let restored = 0;
+  if (saved && saved.answers) {
+    for (const k in saved.answers) {
+      const el = document.querySelector(`input[name="q${k}"][value="${saved.answers[k]}"]`);
+      if (el) { el.checked = true; restored++; }
+    }
+  }
   document.getElementById("intro").style.display = "none";
   document.getElementById("test").style.display = "block";
-  window.scrollTo({ top: 0 });
+  if (restored > 0) {
+    updateProgress();
+    let target = null;
+    for (let i = 0; i < QUESTIONS.length; i++) {
+      if (!document.querySelector(`input[name="q${i}"]:checked`)) { target = document.getElementById(`q${i}`); break; }
+    }
+    if (target) target.scrollIntoView({ block: "center" });
+    else window.scrollTo({ top: document.body.scrollHeight });
+  } else {
+    window.scrollTo({ top: 0 });
+  }
 }
 
 let lastShare = "";
@@ -952,6 +1010,7 @@ function updateProgress() {
   document.getElementById("progressFill").style.width = (n / QUESTIONS.length * 100) + "%";
   document.getElementById("progressLabel").textContent = `${n} / ${QUESTIONS.length}`;
   document.getElementById("warning").style.display = "none";
+  saveProgress();
   blip();
 }
 
@@ -968,6 +1027,7 @@ function submitTest() {
     return;
   }
   addAttempt();
+  clearProgress();
   const mistakes = [];
   QUESTIONS.forEach((item, i) => {
     const chosen = Number(document.querySelector(`input[name="q${i}"]:checked`).value);
@@ -1024,6 +1084,7 @@ function submitTest() {
         nivel: `${result.level} (${result.name})`,
         puntuacion: `${score}/${QUESTIONS.length}`,
         desglose: `Gram ${gC}/${gT} (${gLvl}) · List ${lC}/${lT} (${lLvl})`,
+        fallos: mistakes.length ? mistakes.map(m => (m.i + 1) + (m.chosen === -1 ? "·NS" : "")).join(", ") : "ninguno",
         contacto: contact || "(no dejó contacto)",
         fecha: new Date().toLocaleString("es-AR")
       })
