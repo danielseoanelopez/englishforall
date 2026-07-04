@@ -1,0 +1,14 @@
+# Private — never publish (marketing "pros" page)
+PROS.html
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
