@@ -962,7 +962,7 @@ function startTest() {
       </div>
       <label class="option idk">
         <input type="radio" name="q${i}" value="-1" onchange="updateProgress()">
-        <span>🤷 No lo sé</span>
+        <span>No lo sé</span>
       </label>
     </div>`;
   }).join("");
@@ -1109,7 +1109,7 @@ function submitTest() {
     list.innerHTML = mistakes.map(m => `
       <div class="review-item">
         <p class="rq"><span class="qnum">${String(m.i + 1).padStart(2, "0")}</span>${m.item.q}</p>
-        <p class="wrong">✗ Tu respuesta: ${m.chosen === -1 ? "🤷 No lo sé" : m.item.o[m.chosen]}</p>
+        <p class="wrong">✗ Tu respuesta: ${m.chosen === -1 ? "No lo sé" : m.item.o[m.chosen]}</p>
         <p class="right">✓ Correcta: ${m.item.o[m.item.a]}</p>
         <p class="fb">${m.item.fb}</p>
       </div>`).join("");
