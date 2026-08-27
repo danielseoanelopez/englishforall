@@ -609,6 +609,7 @@
     </div>
     <p class="rankup">RANK UP!</p>
     <p class="rankup-sub">¡Practica un poco cada día y sube de nivel!</p>
+    <div class="btn-row" style="margin-top:14px"><a class="btn" id="campaignCta" href="#" target="_blank" rel="noopener" onclick="gcEvent('cta-campaign-map')"><i class="fa-solid fa-gamepad"></i> EMPEZAR A PRACTICAR GRATIS</a></div>
     <div class="contact-box">
       <div class="panel-title">★ ¿LISTO PARA SUBIR DE NIVEL?</div>
       <p>Reserva tu <b>clase de prueba</b>: confirmamos tu nivel y te propongo un plan a tu medida. <span style="color:#2fd36b">Escríbeme por WhatsApp</span> (tu resultado ya va en el mensaje) o reserva directamente:</p>
@@ -1068,6 +1069,8 @@ function submitTest() {
     "⭐".repeat(result.stars) + `<span class="off">${"⭐".repeat(6 - result.stars)}</span>`;
   document.getElementById("scoreText").textContent = `PUNTUACIÓN: ${score} / ${QUESTIONS.length} — ${result.name}`;
   document.getElementById("levelDesc").textContent = result.desc;
+  document.getElementById("campaignCta").href =
+    "https://danielseoanelopez.github.io/englishforall-campaign/?level=" + result.level;
 
   document.getElementById("desglose").innerHTML =
     `<div style="font-family:'Press Start 2P',monospace;font-size:0.68rem;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin-bottom:12px;letter-spacing:1px">★ TU DESGLOSE</div>` +
