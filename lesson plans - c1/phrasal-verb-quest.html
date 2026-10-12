@@ -1,0 +1,317 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C1 Phrasal Verb Quest</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: single-column quest log — HUD bar, verb codex grid, warm-up gap-fill, writing quest with live verb tracker */
+:root{
+  --bg:#07070f; --panel:#0f1020; --panel-2:#151633; --line:#262a52;
+  --fg:#e7ecff; --muted:#8f97c4;
+  --cyan:#00f5ff; --magenta:#ff00ff; --gold:#ffd700;
+  --ok:#3dff9a; --bad:#ff4d6d;
+  --pixel:"Press Start 2P",ui-monospace,monospace;
+  --display:"Orbitron","Rajdhani",system-ui,sans-serif;
+  --body:"Rajdhani",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:18px;line-height:1.5;
+  background-image:linear-gradient(rgba(0,245,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.04) 1px,transparent 1px);
+  background-size:32px 32px;}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(7,7,15,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+.hud-in{max-width:980px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--pixel);font-size:10px;color:var(--cyan);letter-spacing:.05em}
+.brand b{color:var(--magenta)}
+.stats{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.stat{font-family:var(--pixel);font-size:9px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.xpbar{width:140px;height:10px;border:1px solid var(--cyan);background:#000;position:relative}
+.xpbar i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width .4s}
+.hearts{color:var(--magenta);font-size:16px;letter-spacing:2px;font-family:var(--body)}
+.rank{font-family:var(--pixel);font-size:14px;color:var(--gold);min-width:1.4em;text-align:center}
+
+header.hero{padding-block:40px 24px}
+.level{font-family:var(--pixel);font-size:10px;color:var(--gold);letter-spacing:.1em}
+h1{font-family:var(--pixel);font-size:clamp(18px,4.2vw,30px);line-height:1.45;margin:14px 0 12px;text-wrap:balance;color:var(--fg);text-shadow:0 0 18px rgba(0,245,255,.45)}
+h1 span{color:var(--cyan)}
+.lede{max-width:62ch;color:var(--muted);font-size:19px;margin:0}
+.missions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.missions a{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);text-decoration:none;border:1px solid var(--line);padding:8px 12px;background:var(--panel)}
+.missions a:hover,.missions a:focus-visible{border-color:var(--cyan);outline:none}
+
+section{margin-top:40px}
+h2{font-family:var(--pixel);font-size:13px;color:var(--cyan);margin:0 0 6px;letter-spacing:.06em}
+.sub{color:var(--muted);margin:0 0 18px;max-width:65ch}
+
+.codex{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h3{font-family:var(--display);font-size:19px;margin:0;color:var(--fg);letter-spacing:.02em}
+.tag{font-family:var(--pixel);font-size:8px;color:var(--gold);white-space:nowrap}
+.card .def{margin:0;color:var(--fg)}
+.card .ex{margin:0;color:var(--muted);font-style:italic}
+.card .ex b{color:var(--cyan);font-style:normal;font-weight:600}
+.card .note{margin:0;font-size:15px;color:var(--muted)}
+.card .note em{color:var(--magenta);font-style:normal}
+
+.panel{background:var(--panel);border:1px solid var(--line);padding:20px}
+.gaps{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none;counter-reset:g}
+.gaps li{display:grid;grid-template-columns:2.2em 1fr;gap:8px;align-items:start;counter-increment:g}
+.gaps li::before{content:counter(g,decimal-leading-zero);font-family:var(--pixel);font-size:10px;color:var(--magenta);padding-top:8px}
+.gaps p{margin:0}
+.gaps input{font-family:var(--body);font-size:18px;font-weight:600;background:#05050b;color:var(--cyan);border:none;border-bottom:2px solid var(--line);padding:2px 6px;width:12em;max-width:100%}
+.gaps input:focus{outline:none;border-bottom-color:var(--cyan)}
+.gaps input.ok{border-bottom-color:var(--ok);color:var(--ok)}
+.gaps input.bad{border-bottom-color:var(--bad);color:var(--bad)}
+.fix{font-size:15px;color:var(--gold);margin-left:6px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+button{font-family:var(--pixel);font-size:10px;letter-spacing:.06em;cursor:pointer;padding:12px 16px;border:2px solid var(--cyan);background:transparent;color:var(--cyan)}
+button:hover{background:rgba(0,245,255,.1)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button.alt{border-color:var(--magenta);color:var(--magenta)}
+button.alt:hover{background:rgba(255,0,255,.1)}
+.msg{font-family:var(--display);font-size:14px;color:var(--gold)}
+
+.brief{display:grid;grid-template-columns:1fr;gap:12px}
+.brief .task{border-left:3px solid var(--gold);padding:4px 0 4px 14px}
+.brief .task h3{font-family:var(--display);font-size:20px;margin:0 0 6px}
+.brief ul{margin:6px 0 0;padding-left:1.1em;color:var(--muted)}
+.brief ul li{margin:2px 0}
+.writer{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;margin-top:16px}
+@media (max-width:760px){.writer{grid-template-columns:1fr}}
+textarea{width:100%;min-height:360px;resize:vertical;background:#05050b;color:var(--fg);border:1px solid var(--line);padding:14px;font-family:var(--body);font-size:18px;line-height:1.6}
+textarea:focus{outline:none;border-color:var(--cyan)}
+.tracker{background:var(--panel-2);border:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.tracker h4{font-family:var(--pixel);font-size:9px;color:var(--muted);margin:0;letter-spacing:.06em}
+.meter{font-family:var(--display);font-size:15px;display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.meter b{color:var(--cyan)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--body);font-weight:600;font-size:14px;padding:3px 8px;border:1px solid var(--line);color:var(--muted)}
+.chip.on{border-color:var(--ok);color:var(--ok);background:rgba(61,255,154,.08)}
+.chip.on::before{content:"✓ "}
+.result{font-family:var(--display);font-size:15px;color:var(--fg);border-top:1px solid var(--line);padding-top:10px}
+.result .big{font-family:var(--pixel);font-size:26px;color:var(--gold);display:block;margin:4px 0}
+
+details{margin-top:20px;background:var(--panel);border:1px solid var(--line)}
+summary{cursor:pointer;padding:14px 16px;font-family:var(--pixel);font-size:10px;color:var(--magenta);letter-spacing:.06em}
+summary:focus-visible{outline:2px solid var(--gold)}
+.model{padding:0 18px 18px;max-width:70ch}
+.model h3{font-family:var(--display);margin:4px 0 10px}
+.model p{margin:0 0 12px}
+.model mark{background:none;color:var(--cyan);font-weight:600;border-bottom:1px dashed var(--cyan)}
+.rubric{width:100%;border-collapse:collapse;font-size:16px}
+.rubric th,.rubric td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.rubric th{font-family:var(--pixel);font-size:9px;color:var(--gold);font-weight:400}
+.tbl{overflow-x:auto}
+
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;align-items:center}
+footer .brand{font-size:11px}
+footer p{margin:0;color:var(--muted);font-size:15px}
+footer a{color:var(--cyan)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head><body>
+
+<div class="hud" role="banner">
+  <div class="hud-in">
+    <div class="brand">ENGLISH FOR <b>ALL</b> · RANK UP YOUR ENGLISH</div>
+    <div class="stats">
+      <div class="stat">XP <div class="xpbar" aria-hidden="true"><i id="xpfill"></i></div><span id="xp">0</span></div>
+      <div class="stat">LIVES <span class="hearts" id="hearts" aria-label="3 lives">♥♥♥</span></div>
+      <div class="stat">RANK <span class="rank" id="rank">D</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="level">LEVEL C1 · ADVANCED</div>
+    <h1>Phrasal Verb <span>Quest</span></h1>
+    <p class="lede">Ten phrasal verbs that make advanced writing sound natural instead of textbook. Study the codex, clear the warm-up, then use them in a short article.</p>
+    <nav class="missions" aria-label="Missions">
+      <a href="#codex">1 · Codex</a><a href="#warmup">2 · Warm-up</a><a href="#quest">3 · Writing quest</a>
+    </nav>
+  </header>
+
+  <section id="codex">
+    <h2>MISSION 1 · THE CODEX</h2>
+    <p class="sub">Each card shows the meaning, a model sentence, and a usage note. <em>Sep.</em> means the object can go between the verb and the particle.</p>
+    <div class="codex" id="codexGrid"></div>
+  </section>
+
+  <section id="warmup">
+    <h2>MISSION 2 · WARM-UP</h2>
+    <p class="sub">Type the phrasal verb in the correct form. Watch your tense. Each correct answer is worth 10 XP; a wrong check costs a life.</p>
+    <div class="panel">
+      <ol class="gaps" id="gaps"></ol>
+      <div class="row">
+        <button id="checkBtn" type="button">CHECK ANSWERS</button>
+        <button id="showBtn" type="button" class="alt">SHOW ANSWERS</button>
+        <span class="msg" id="gapMsg" role="status"></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="quest">
+    <h2>MISSION 3 · WRITING QUEST</h2>
+    <p class="sub">The boss level. Write the text below and watch the tracker light up as you use each verb.</p>
+    <div class="panel brief">
+      <div class="task">
+        <h3>Article: “The plan that taught me the most”</h3>
+        <p style="margin:0">A careers magazine has asked readers to write about a plan, project or goal that went wrong. Describe what happened, explain what caused it, and say what you learned.</p>
+        <ul>
+          <li>180–220 words, in three or four paragraphs</li>
+          <li>Use 6 or 7 of the 10 phrasal verbs, in different tenses. More is not better: a good writer chooses them where they sound natural.</li>
+          <li>Give your article an engaging title</li>
+          <li>Use a semi-formal, reflective tone</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="writer">
+      <div style="min-width:0">
+        <label for="essay" class="stat" style="margin-bottom:8px">YOUR ARTICLE</label>
+        <textarea id="essay" placeholder="Title: ...&#10;&#10;Start writing here."></textarea>
+        <div class="row">
+          <button id="copyBtn" type="button">COPY TEXT</button>
+          <button id="clearBtn" type="button" class="alt">CLEAR</button>
+          <span class="msg" id="copyMsg" role="status"></span>
+        </div>
+      </div>
+      <aside class="tracker" aria-label="Progress tracker">
+        <h4>LIVE TRACKER</h4>
+        <div class="meter"><span>Words</span><b id="wc">0</b></div>
+        <div class="meter"><span>Target</span><span>180–220</span></div>
+        <div class="meter"><span>Verbs used</span><b id="vc">0</b></div>
+        <div class="meter"><span>Target</span><span>6–7</span></div>
+        <div class="chips" id="chips"></div>
+        <div class="result" id="result">Write at least 6 verbs to unlock a rank.</div>
+      </aside>
+    </div>
+
+    <details>
+      <summary>▸ TEACHER: SAMPLE ANSWER (7 VERBS)</summary>
+      <div class="model">
+        <h3>The Launch That Never Was</h3>
+        <p>Two years ago, I was asked to lead the launch of a mobile app for a small travel company. On paper, it looked simple. In reality, the whole project ended up <mark>falling through</mark>, and it taught me more than any success ever has.</p>
+        <p>Looking back, most of our problems <mark>stemmed from</mark> poor communication. The developers and the marketing team rarely spoke, and whenever someone raised a concern, I <mark>played it down</mark> because I didn't want to <mark>come across as</mark> negative. We kept telling ourselves we would <mark>iron out</mark> the issues later.</p>
+        <p>Three weeks before launch, our main investor withdrew. At first we couldn't <mark>rule out</mark> a rescue deal, but it soon became clear that the company would have to cancel the project entirely.</p>
+        <p>What did I learn? Above all, that a leader has to stay firm under pressure, even when it means delivering bad news early. Honest conversations <mark>bring about</mark> better decisions than polite silence ever will.</p>
+        <p>In the end, I think good leadership is really about one thing: dealing with small problems before they become big ones.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>▸ TEACHER: MARKING GRID</summary>
+      <div class="model tbl">
+        <table class="rubric">
+          <thead><tr><th>CRITERION</th><th>S RANK</th><th>B RANK</th><th>D RANK</th></tr></thead>
+          <tbody>
+            <tr><td>Phrasal verbs</td><td>7 used accurately and naturally, varied tenses, separable forms handled correctly</td><td>6 used, mostly accurate; or more than 7, with some forced in</td><td>Fewer than 6, meaning often wrong, or heavy overuse</td></tr>
+            <tr><td>Task</td><td>Clear story, cause and lesson; engaging title</td><td>All three parts present</td><td>Missing cause or lesson</td></tr>
+            <tr><td>Organisation</td><td>Logical paragraphs, smooth linking</td><td>Paragraphed, some linking</td><td>One block or hard to follow</td></tr>
+            <tr><td>Register</td><td>Consistent semi-formal, reflective tone</td><td>Mostly appropriate</td><td>Too casual or too stiff</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="brand">ENGLISH FOR <b>ALL</b></div>
+    <p>Rank Up Your English · @englishforall_dan · <a href="https://englishforall.taplink.site" target="_blank" rel="noopener">Book a class</a></p>
+  </footer>
+</div>
+
+<script>
+const VERBS=[
+ {pv:"boil down to",def:"to be, at its most basic, about one thing",ex:"The whole argument <b>boils down to</b> trust.",note:"Inseparable. Often followed by <em>one thing</em> or a noun.",forms:["boil","boils","boiled","boiling"],part:"down to",sep:false},
+ {pv:"bring about",def:"to cause something to happen, usually a change",ex:"The internet has <b>brought about</b> huge changes in education.",note:"Sep. Formal; common in essays.",forms:["bring","brings","brought","bringing"],part:"about",sep:true},
+ {pv:"come across as",def:"to give a particular impression to others",ex:"He can <b>come across as</b> rude, but he's just shy.",note:"Inseparable. Follow with an adjective or noun.",forms:["come","comes","came","coming"],part:"across as",sep:false},
+ {pv:"fall through",def:"to fail to happen or be completed",ex:"Our holiday plans <b>fell through</b> at the last minute.",note:"Intransitive. No object.",forms:["fall","falls","fell","fallen","falling"],part:"through",sep:false},
+ {pv:"iron out",def:"to solve small problems or differences",ex:"We need to <b>iron out</b> a few issues before the launch.",note:"Sep. <em>iron them out</em>, never <em>iron out them</em>.",forms:["iron","irons","ironed","ironing"],part:"out",sep:true},
+ {pv:"phase out",def:"to stop using something gradually",ex:"The city is <b>phasing out</b> diesel buses.",note:"Sep. Frequent in news and policy writing.",forms:["phase","phases","phased","phasing"],part:"out",sep:true},
+ {pv:"play down",def:"to make something seem less important than it is",ex:"The minister <b>played down</b> the risks.",note:"Sep. Opposite: <em>play up</em>.",forms:["play","plays","played","playing"],part:"down",sep:true},
+ {pv:"rule out",def:"to decide that something is not possible",ex:"Doctors have <b>ruled out</b> a serious infection.",note:"Sep. Also <em>rule it out</em>.",forms:["rule","rules","ruled","ruling"],part:"out",sep:true},
+ {pv:"stand up to",def:"to resist or defend yourself against someone powerful",ex:"She <b>stood up to</b> her manager about unpaid overtime.",note:"Inseparable. Object comes after <em>to</em>.",forms:["stand","stands","stood","standing"],part:"up to",sep:false},
+ {pv:"stem from",def:"to be caused by or originate in",ex:"Many conflicts <b>stem from</b> misunderstandings.",note:"Inseparable. Rarely used in the continuous.",forms:["stem","stems","stemmed","stemming"],part:"from",sep:false}
+];
+const GAPS=[
+ {s:"The merger ___ at the last minute, so the two companies stayed independent.",a:["fell through"]},
+ {s:"Police have ___ foul play; the fire was an accident.",a:["ruled out"]},
+ {s:"Most of her anxiety ___ a fear of failure.",a:["stems from"]},
+ {s:"The government plans to ___ petrol cars by 2035.",a:["phase out"]},
+ {s:"We still need to ___ a few details before we sign the contract.",a:["iron out"]},
+ {s:"In the end, the whole debate ___ money.",a:["boils down to","boiled down to"]},
+ {s:"He tried to ___ his injury, but he was clearly in pain.",a:["play down"]},
+ {s:"She ___ quite arrogant in the interview, although she's actually very shy.",a:["came across as"]},
+ {s:"It takes real courage to ___ a bully.",a:["stand up to"]},
+ {s:"The new law has ___ major changes in the workplace.",a:["brought about"]}
+];
+
+let state={gapXP:0,writeXP:0,lives:3};
+const $=id=>document.getElementById(id);
+
+$("codexGrid").innerHTML=VERBS.map(v=>`<article class="card"><div class="top"><h3>${v.pv}</h3><span class="tag">${v.sep?"SEP.":"INSEP."}</span></div><p class="def">${v.def}</p><p class="ex">${v.ex}</p><p class="note">${v.note}</p></article>`).join("");
+
+$("gaps").innerHTML=GAPS.map((g,i)=>{const [a,b]=g.s.split("___");return `<li><p>${a}<input id="g${i}" type="text" autocomplete="off" spellcheck="false" aria-label="Gap ${i+1}">${b}<span class="fix" id="f${i}"></span></p></li>`}).join("");
+
+const norm=s=>s.toLowerCase().replace(/[^a-z ]/g,"").replace(/\s+/g," ").trim();
+
+function updateHUD(){
+  const xp=state.gapXP+state.writeXP, max=100+190, p=xp/max;
+  $("xp").textContent=xp;
+  $("xpfill").style.width=Math.min(100,p*100)+"%";
+  $("hearts").textContent="♥".repeat(state.lives)+"♡".repeat(3-state.lives);
+  $("hearts").setAttribute("aria-label",state.lives+" lives");
+  const r=p>=.95?"S":p>=.8?"A":p>=.6?"B":p>=.3?"C":"D";
+  $("rank").textContent=r;
+}
+
+$("checkBtn").onclick=()=>{
+  let right=0;
+  GAPS.forEach((g,i)=>{const el=$("g"+i);const ok=g.a.includes(norm(el.value));el.classList.toggle("ok",ok);el.classList.toggle("bad",!ok&&el.value.trim()!=="");if(ok)right++;});
+  state.gapXP=right*10;
+  if(right<GAPS.length&&state.lives>0)state.lives--;
+  $("gapMsg").textContent=right===10?"PERFECT CLEAR! +100 XP":`${right}/10 correct${state.lives===0?" · No lives left. Reveal the answers and study the codex.":""}`;
+  updateHUD();
+};
+$("showBtn").onclick=()=>{GAPS.forEach((g,i)=>{$("f"+i).textContent="→ "+g.a[0]});$("gapMsg").textContent="Answers revealed.";};
+
+const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+const RX=VERBS.map(v=>new RegExp("\\b(?:"+v.forms.join("|")+")"+(v.sep?"(?:\\s+[a-z'’-]+){0,3}?":"")+"\\s+"+esc(v.part).replace(/ /g,"\\s+")+"\\b","i"));
+
+$("chips").innerHTML=VERBS.map((v,i)=>`<span class="chip" id="c${i}">${v.pv}</span>`).join("");
+
+function track(){
+  const t=$("essay").value;
+  const words=(t.match(/[A-Za-z’'-]+/g)||[]).length;
+  let used=0;
+  RX.forEach((rx,i)=>{const on=rx.test(t);$("c"+i).classList.toggle("on",on);if(on)used++;});
+  $("wc").textContent=words;
+  $("wc").style.color=words>=180&&words<=220?"var(--ok)":words>220?"var(--bad)":"var(--cyan)";
+  $("vc").textContent=used;
+  $("vc").style.color=used>7?"var(--bad)":used>=6?"var(--ok)":"var(--cyan)";
+  const inRange=words>=180&&words<=220;
+  state.writeXP=Math.min(used,7)*20-Math.max(0,used-7)*20+(inRange?50:0);
+  let msg;
+  if(used<6) msg=`Use ${6-used} more verb${6-used===1?"":"s"} to unlock a rank.`;
+  else{
+    const over=used-7;
+    const r=!inRange?"C":used===7?"S":used===6?"A":"B";
+    const tip=over>0?`Too many phrasal verbs. Swap ${over} for a simpler word so it sounds natural.`:inRange?"Word count on target.":"Adjust your length to 180–220 words.";
+    msg=`Quest rank<span class="big">${r}</span>${tip}`;
+  }
+  $("result").innerHTML=msg;
+  updateHUD();
+  try{localStorage.setItem("pvq-essay",t)}catch(e){}
+}
+$("essay").addEventListener("input",track);
+try{const saved=localStorage.getItem("pvq-essay");if(saved){$("essay").value=saved}}catch(e){}
+track();
+
+$("copyBtn").onclick=()=>{const t=$("essay");
+  navigator.clipboard.writeText(t.value).then(()=>{$("copyMsg").textContent="Copied."}).catch(()=>{t.select();$("copyMsg").textContent="Text selected. Press Ctrl+C."});};
+$("clearBtn").onclick=()=>{$("essay").value="";track();$("copyMsg").textContent="Cleared.";};
+updateHUD();
+</script>
+</body></html>
