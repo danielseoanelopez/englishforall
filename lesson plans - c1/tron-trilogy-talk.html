@@ -1,0 +1,300 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tron Trilogy Talk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: single-column speaking session — HUD, warm-up spinner, phrase bank with live tally, 3-film grid, discussion tiers, debate, tier list */
+:root{
+  --bg:#07070f; --panel:#0f1020; --panel-2:#151633; --line:#262a52;
+  --fg:#e7ecff; --muted:#8f97c4;
+  --cyan:#00f5ff; --magenta:#ff00ff; --gold:#ffd700; --orange:#ff8a1f;
+  --ok:#3dff9a;
+  --pixel:"Press Start 2P",ui-monospace,monospace;
+  --display:"Orbitron","Rajdhani",system-ui,sans-serif;
+  --body:"Rajdhani",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:18px;line-height:1.5;
+  background-image:linear-gradient(rgba(0,245,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.04) 1px,transparent 1px);background-size:32px 32px}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(7,7,15,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+.hud-in{max-width:980px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--pixel);font-size:10px;color:var(--cyan);letter-spacing:.05em}
+.brand b{color:var(--magenta)}
+.stats{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.stat{font-family:var(--pixel);font-size:9px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.xpbar{width:140px;height:10px;border:1px solid var(--cyan);background:#000;position:relative}
+.xpbar i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width .4s}
+.rank{font-family:var(--pixel);font-size:14px;color:var(--gold);min-width:1.4em;text-align:center}
+
+header.hero{padding-block:40px 24px}
+.level{font-family:var(--pixel);font-size:10px;color:var(--gold);letter-spacing:.1em}
+h1{font-family:var(--pixel);font-size:clamp(18px,4.2vw,30px);line-height:1.45;margin:14px 0 12px;text-wrap:balance;text-shadow:0 0 18px rgba(0,245,255,.45)}
+h1 span{color:var(--orange);text-shadow:0 0 18px rgba(255,138,31,.5)}
+.lede{max-width:62ch;color:var(--muted);font-size:19px;margin:0}
+.films{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.film{font-family:var(--display);font-size:13px;letter-spacing:.06em;border:1px solid var(--line);padding:6px 10px;background:var(--panel)}
+.film.f1{color:var(--cyan)} .film.f2{color:var(--magenta)} .film.f3{color:var(--orange)}
+
+section{margin-top:40px}
+h2{font-family:var(--pixel);font-size:13px;color:var(--cyan);margin:0 0 6px;letter-spacing:.06em}
+.sub{color:var(--muted);margin:0 0 18px;max-width:65ch}
+.panel{background:var(--panel);border:1px solid var(--line);padding:20px}
+
+button{font-family:var(--pixel);font-size:10px;letter-spacing:.06em;cursor:pointer;padding:12px 16px;border:2px solid var(--cyan);background:transparent;color:var(--cyan)}
+button:hover{background:rgba(0,245,255,.1)}
+button:focus-visible,summary:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button.alt{border-color:var(--magenta);color:var(--magenta)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+
+.spin{min-height:5.5em;display:flex;align-items:center;font-family:var(--display);font-size:clamp(19px,2.6vw,24px);font-weight:500;line-height:1.4;border-left:3px solid var(--orange);padding:6px 0 6px 16px;text-wrap:balance}
+.count{font-family:var(--pixel);font-size:9px;color:var(--muted)}
+
+.bank{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.group h3{font-family:var(--pixel);font-size:9px;color:var(--gold);margin:0 0 10px;letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--body);font-weight:600;font-size:16px;padding:5px 10px;border:1px solid var(--line);color:var(--fg);background:transparent;letter-spacing:0;cursor:pointer;text-align:left}
+.chip:hover{background:rgba(0,245,255,.06)}
+.chip.on{border-color:var(--ok);color:var(--ok);background:rgba(61,255,154,.08)}
+.chip.on::before{content:"✓ "}
+.tally{font-family:var(--display);font-size:15px;color:var(--gold);font-variant-numeric:tabular-nums}
+
+.tbl{overflow-x:auto;border:1px solid var(--line)}
+table.grid{border-collapse:collapse;width:100%;min-width:680px;font-size:16px}
+.grid th,.grid td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}
+.grid thead th{font-family:var(--display);font-size:14px;letter-spacing:.04em;background:var(--panel-2)}
+.grid thead th small{display:block;font-family:var(--body);color:var(--muted);font-size:13px;letter-spacing:0}
+.grid tbody th{font-family:var(--pixel);font-size:9px;color:var(--gold);font-weight:400;width:130px;background:var(--panel)}
+.grid td{background:var(--panel)}
+.reveal{all:unset;cursor:pointer;display:block;width:100%;color:var(--muted);font-family:var(--body);font-size:15px;border:1px dashed var(--line);padding:6px 8px;text-align:center}
+.reveal:hover{border-color:var(--cyan);color:var(--cyan)}
+.reveal:focus-visible{outline:2px solid var(--gold)}
+.col1{color:var(--cyan)} .col2{color:var(--magenta)} .col3{color:var(--orange)}
+
+.tiers{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.tier{background:var(--panel);border:1px solid var(--line);padding:16px;min-width:0}
+.tier .tag{font-family:var(--pixel);font-size:9px;letter-spacing:.06em}
+.tier ol{margin:10px 0 0;padding-left:1.2em;display:flex;flex-direction:column;gap:8px}
+.tier li::marker{color:var(--muted);font-family:var(--display)}
+.t1 .tag{color:var(--cyan)} .t2 .tag{color:var(--magenta)} .t3 .tag{color:var(--orange)}
+
+.debate{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.debate{grid-template-columns:1fr}}
+.side{border:1px solid var(--line);background:var(--panel);padding:16px}
+.side h3{font-family:var(--display);font-size:18px;margin:0 0 6px}
+.side.a h3{color:var(--cyan)} .side.b h3{color:var(--orange)}
+.side ul{margin:8px 0 0;padding-left:1.1em;color:var(--muted)}
+.side p{margin:0}
+
+.tierlist{display:flex;flex-direction:column;gap:10px}
+.tl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);padding:12px 14px}
+.tl span{font-family:var(--display);font-size:16px}
+select{font-family:var(--pixel);font-size:12px;background:#05050b;color:var(--gold);border:1px solid var(--gold);padding:8px 10px}
+.prompt{margin-top:12px;color:var(--muted);font-size:16px}
+
+details{margin-top:20px;background:var(--panel);border:1px solid var(--line)}
+summary{cursor:pointer;padding:14px 16px;font-family:var(--pixel);font-size:10px;color:var(--magenta);letter-spacing:.06em}
+.notes{padding:0 18px 18px;max-width:72ch}
+.notes p,.notes li{margin:0 0 10px}
+.notes ul{padding-left:1.1em;margin:0}
+
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;align-items:center}
+footer .brand{font-size:11px}
+footer p{margin:0;color:var(--muted);font-size:15px}
+footer a{color:var(--cyan)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head><body>
+
+<div class="hud" role="banner">
+  <div class="hud-in">
+    <div class="brand">ENGLISH FOR <b>ALL</b> · RANK UP YOUR ENGLISH</div>
+    <div class="stats">
+      <div class="stat">XP <div class="xpbar" aria-hidden="true"><i id="xpfill"></i></div><span id="xp">0</span></div>
+      <div class="stat">RANK <span class="rank" id="rank">D</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="level">LEVEL B2–C1 · SPEAKING SESSION</div>
+    <h1>Tron Trilogy <span>Talk</span></h1>
+    <p class="lede">Three films, forty-three years apart. Talk about Tron: Ares, then compare it with the two films that came before it, using the language of comparison.</p>
+    <div class="films"><span class="film f1">TRON · 1982</span><span class="film f2">TRON: LEGACY · 2010</span><span class="film f3">TRON: ARES · 2025</span></div>
+  </header>
+
+  <section id="warmup">
+    <h2>MISSION 1 · BOOT SEQUENCE</h2>
+    <p class="sub">Quick first reactions to Tron: Ares. Spin for a question and answer it in 30–60 seconds. No wrong answers, just keep talking.</p>
+    <div class="panel">
+      <div class="spin" id="spinQ" aria-live="polite">Press SPIN to get your first question.</div>
+      <div class="row"><button id="spinBtn" type="button">SPIN</button><span class="count" id="spinCount">0 / 10 ANSWERED</span></div>
+    </div>
+  </section>
+
+  <section id="bank">
+    <h2>MISSION 2 · COMPARISON TOOLKIT</h2>
+    <p class="sub">Use these phrases for the rest of the session. Teacher: tap a phrase each time the student uses it naturally. Every phrase is worth 10 XP.</p>
+    <div class="panel">
+      <div class="bank" id="bankGrid"></div>
+      <div class="row"><span class="tally" id="tally">0 phrases used</span><button id="resetBank" type="button" class="alt">RESET</button></div>
+    </div>
+  </section>
+
+  <section id="grid">
+    <h2>MISSION 3 · THE THREE GRIDS</h2>
+    <p class="sub">Talk through each row before you reveal it. What do you remember? Then compare: <em>“In the first film…, whereas in Ares…”</em></p>
+    <div class="tbl">
+      <table class="grid">
+        <thead><tr><th></th><th class="col1">TRON<small>1982 · dir. Steven Lisberger</small></th><th class="col2">TRON: LEGACY<small>2010 · dir. Joseph Kosinski</small></th><th class="col3">TRON: ARES<small>2025 · dir. Joachim Rønning</small></th></tr></thead>
+        <tbody id="gridBody"></tbody>
+      </table>
+    </div>
+    <div class="row"><button id="revealAll" type="button" class="alt">REVEAL ALL</button></div>
+  </section>
+
+  <section id="discuss">
+    <h2>MISSION 4 · GOING DEEPER</h2>
+    <p class="sub">Choose questions from each tier. Push for reasons and examples, not just yes or no.</p>
+    <div class="tiers">
+      <div class="tier t1"><div class="tag">TIER 1 · THE FILMS</div><ol>
+        <li>Which film has aged the best, and which feels the most dated? Why?</li>
+        <li>Ares was the first Tron film where the hero is a program, not a human. Did that make you care more or less?</li>
+        <li>Compare the villains. Who was the most threatening: the MCP, Clu or Julian Dillinger?</li>
+        <li>Each film has a very different soundtrack. How much does the music shape the mood?</li>
+      </ol></div>
+      <div class="tier t2"><div class="tag">TIER 2 · THE IDEAS</div><ol>
+        <li>In 1982 the fear was being trapped inside a computer. In 2025 it's AI coming out into our world. What does that change tell us about each era?</li>
+        <li>Programs in Ares last only 29 minutes in the real world. Is a built-in limit like that a smart safeguard for AI, or a kind of cruelty?</li>
+        <li>Ares starts to question his orders. Can something that was programmed ever really have free will?</li>
+        <li>Is it fair to compare a 1982 film with a 2025 one, or should each be judged by the standards of its time?</li>
+      </ol></div>
+      <div class="tier t3"><div class="tag">TIER 3 · REAL LIFE</div><ol>
+        <li>Who should own powerful technology: big companies, governments or nobody? Use Eve Kim and Julian Dillinger as examples.</li>
+        <li>Which ideas from the Tron films have actually come true since 1982?</li>
+        <li>Would you want a digital version of yourself to keep existing after you die? Why, or why not?</li>
+        <li>Sequels and reboots dominate cinema now. Is that a good thing for audiences?</li>
+      </ol></div>
+    </div>
+  </section>
+
+  <section id="debate">
+    <h2>MISSION 5 · BOSS BATTLE: THE PERMANENCE CODE</h2>
+    <p class="sub">The code that lets programs live permanently in the real world has just been found. Pick a side and argue for two minutes, then swap. Use at least three toolkit phrases.</p>
+    <div class="debate">
+      <div class="side a"><h3>Release it</h3><p>Permanent programs could transform medicine, rebuild infrastructure and end food shortages.</p><ul><li>Think of the people it could help.</li><li>Progress always comes with risk.</li><li>If we don't, someone worse will.</li></ul></div>
+      <div class="side b"><h3>Destroy it</h3><p>Permanent programs could be turned into soldiers that never stop and can't be switched off.</p><ul><li>Who controls them?</li><li>Some technology is too dangerous to exist.</li><li>The 29-minute limit is there for a reason.</li></ul></div>
+    </div>
+  </section>
+
+  <section id="tierlist">
+    <h2>MISSION 6 · FINAL RANKING</h2>
+    <p class="sub">Give each film a rank and defend it. Your ranking is worth 30 XP once all three are set.</p>
+    <div class="tierlist">
+      <div class="tl"><span class="col1">TRON (1982)</span><select id="r0" aria-label="Rank for Tron 1982"><option value="">–</option><option>S</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+      <div class="tl"><span class="col2">TRON: LEGACY (2010)</span><select id="r1" aria-label="Rank for Tron: Legacy"><option value="">–</option><option>S</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+      <div class="tl"><span class="col3">TRON: ARES (2025)</span><select id="r2" aria-label="Rank for Tron: Ares"><option value="">–</option><option>S</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+    </div>
+    <p class="prompt" id="rankPrompt">Explain your ranking: “I'd put … above … because …, although …”</p>
+
+    <details>
+      <summary>▸ TEACHER NOTES</summary>
+      <div class="notes">
+        <p>About 60 minutes. Suggested timing: boot sequence 10, toolkit intro 5, three grids 15, going deeper 15, boss battle 10, ranking 5.</p>
+        <ul>
+          <li>Keep the toolkit visible all session and tap phrases as they come up. Aim for 10 or more by the end.</li>
+          <li>Correct after the speaking, not during. Note errors and review them at the end.</li>
+          <li>Push for linked answers: opinion, then reason, then example.</li>
+          <li>Common errors to listen for: <em>“more better”</em>, <em>“the same than”</em> (the same as), <em>“different of”</em> (different from), and <em>“whereas”</em> used to start a new sentence on its own.</li>
+          <li>Homework option: a short review comparing two of the films, 150–200 words.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="brand">ENGLISH FOR <b>ALL</b></div>
+    <p>Rank Up Your English · @englishforall_dan · <a href="https://englishforall.taplink.site" target="_blank" rel="noopener">Book a class</a></p>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const SPIN=[
+ "Sum up Tron: Ares in one sentence for someone who hasn't seen it.",
+ "What was the best scene, and what made it work?",
+ "Was there a moment that didn't work for you? What would you change?",
+ "Ares or Eve Kim: who was the more interesting character, and why?",
+ "Did you prefer the scenes inside the Grid or in the real world?",
+ "How did the music make you feel during the action scenes?",
+ "Did the film need the earlier films, or does it work on its own?",
+ "Would you recommend it to a friend who has never seen a Tron film?",
+ "What did you think of Julian Dillinger as a villain?",
+ "If you could ask the director one question, what would it be?"
+];
+let order=[],spun=0;
+$("spinBtn").onclick=()=>{
+  if(!order.length) order=SPIN.map((_,i)=>i).sort(()=>Math.random()-.5);
+  const q=SPIN[order.pop()];
+  $("spinQ").textContent=q;
+  spun=Math.min(10,spun+1);
+  $("spinCount").textContent=spun+" / 10 ANSWERED";
+  update();
+};
+
+const BANK=[
+ {h:"CONTRAST",p:["whereas…","while…","unlike…","in contrast,","on the other hand,","…is nothing like…"]},
+ {h:"SIMILARITY",p:["both… and…","neither… nor…","similarly,","just like…","…has a lot in common with…"]},
+ {h:"DEGREE",p:["far / much more…","slightly less…","not nearly as… as…","by far the best","a big step up from…"]},
+ {h:"OPINION",p:["…has aged well / badly","…holds up today","it didn't live up to…","what stood out for me was…","I'd put… above… because…"]}
+];
+$("bankGrid").innerHTML=BANK.map((g,gi)=>`<div class="group"><h3>${g.h}</h3><div class="chips">${g.p.map((p,pi)=>`<button type="button" class="chip" data-k="${gi}-${pi}" aria-pressed="false">${p}</button>`).join("")}</div></div>`).join("");
+let used=new Set();
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+  const k=c.dataset.k;
+  used.has(k)?used.delete(k):used.add(k);
+  c.classList.toggle("on",used.has(k));
+  c.setAttribute("aria-pressed",used.has(k));
+  update();
+});
+$("resetBank").onclick=()=>{used.clear();document.querySelectorAll(".chip").forEach(c=>{c.classList.remove("on");c.setAttribute("aria-pressed","false")});update();};
+
+const GRID=[
+ ["WHO CROSSES OVER?","A human, Kevin Flynn, is pulled into a computer.","A human, Sam Flynn, follows his father into the Grid.","A program, Ares, comes out into the real world."],
+ ["THE HERO","Flynn, helped by the program Tron.","Sam Flynn, with Quorra and his father.","Ares, a program who starts to question his orders."],
+ ["THE VILLAIN","The Master Control Program, and Ed Dillinger.","Clu, a copy of Flynn who wants a perfect system.","Julian Dillinger, who wants to use programs as weapons."],
+ ["THE BIG FEAR","Corporations controlling computers and stealing ideas.","The danger of chasing perfection.","AI entering our world and who gets to control it."],
+ ["THE SOUND","An early electronic score by Wendy Carlos.","A score by Daft Punk.","A score by Nine Inch Nails."],
+ ["THE LOOK","Groundbreaking early computer graphics.","Glossy black-and-blue digital world.","The Grid's look brought into real cities."]
+];
+$("gridBody").innerHTML=GRID.map((r,ri)=>`<tr><th scope="row">${r[0]}</th>${r.slice(1).map((c,ci)=>`<td><button class="reveal" type="button" data-t="${c.replace(/"/g,"&quot;")}">Tap to reveal</button></td>`).join("")}</tr>`).join("");
+let revealed=0;
+function reveal(b){if(!b.isConnected)return;const td=b.parentElement;td.textContent=b.dataset.t;revealed++;update();}
+document.querySelectorAll(".reveal").forEach(b=>b.onclick=()=>reveal(b));
+$("revealAll").onclick=()=>document.querySelectorAll(".reveal").forEach(reveal);
+
+const ranks=[0,1,2].map(i=>$("r"+i));
+ranks.forEach(s=>s.onchange=()=>{
+  const v=ranks.map(r=>r.value);
+  if(v.every(Boolean)){
+    const names=["Tron","Legacy","Ares"];
+    const order=[0,1,2].sort((a,b)=>"SABCD".indexOf(v[a])-"SABCD".indexOf(v[b]));
+    $("rankPrompt").textContent=`Now defend it: why did ${names[order[0]]} beat ${names[order[2]]}? Use “far”, “much” or “not nearly as… as…”.`;
+  }
+  update();
+});
+
+function update(){
+  const rankDone=ranks.every(r=>r.value)?30:0;
+  const xp=spun*5+used.size*10+revealed*2+rankDone;
+  const max=50+210+36+30;
+  $("xp").textContent=xp;
+  $("xpfill").style.width=Math.min(100,xp/max*100)+"%";
+  $("tally").textContent=used.size+(used.size===1?" phrase":" phrases")+" used";
+  const p=xp/max;
+  $("rank").textContent=p>=.7?"S":p>=.55?"A":p>=.4?"B":p>=.2?"C":"D";
+}
+update();
+</script>
+</body></html>
