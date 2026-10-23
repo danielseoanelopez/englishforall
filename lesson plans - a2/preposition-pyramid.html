@@ -1,0 +1,554 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preposition Pyramid</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: single-column quest log — HUD, pyramid rule map, codex cards, one-card sorter, gap-fill with lives, speaking spinner, writing boss with live tracker */
+:root{
+  --bg:#07070f; --panel:#0f1020; --panel-2:#151633; --line:#262a52;
+  --fg:#e7ecff; --muted:#8f97c4; --ink:#05050b;
+  --cyan:#00f5ff; --magenta:#ff00ff; --gold:#ffd700;
+  --ok:#3dff9a; --bad:#ff4d6d;
+  --pixel:"Press Start 2P",ui-monospace,monospace;
+  --display:"Orbitron","Rajdhani",system-ui,sans-serif;
+  --body:"Rajdhani",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:18px;line-height:1.5;
+  background-image:linear-gradient(rgba(0,245,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.04) 1px,transparent 1px);background-size:32px 32px}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(7,7,15,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+.hud-in{max-width:980px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--pixel);font-size:10px;color:var(--cyan);letter-spacing:.05em}
+.brand b{color:var(--magenta)}
+.stats{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.stat{font-family:var(--pixel);font-size:9px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.xpbar{width:140px;height:10px;border:1px solid var(--cyan);background:#000;position:relative}
+.xpbar i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width .4s}
+.hearts{color:var(--magenta);font-size:16px;letter-spacing:2px;font-family:var(--body)}
+.rank{font-family:var(--pixel);font-size:14px;color:var(--gold);min-width:1.4em;text-align:center}
+
+.c-in{color:var(--cyan)} .c-on{color:var(--magenta)} .c-at{color:var(--gold)}
+
+header.hero{padding-block:40px 24px}
+.level{font-family:var(--pixel);font-size:10px;color:var(--gold);letter-spacing:.1em}
+h1{font-family:var(--pixel);font-size:clamp(18px,4.2vw,30px);line-height:1.45;margin:14px 0 12px;text-wrap:balance;text-shadow:0 0 18px rgba(0,245,255,.45)}
+.lede{max-width:62ch;color:var(--muted);font-size:19px;margin:0}
+.lede b{color:var(--fg)}
+.missions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.missions a{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);text-decoration:none;border:1px solid var(--line);padding:8px 12px;background:var(--panel)}
+.missions a:hover,.missions a:focus-visible{border-color:var(--cyan);outline:none}
+
+section{margin-top:44px}
+h2{font-family:var(--pixel);font-size:13px;color:var(--cyan);margin:0 0 6px;letter-spacing:.06em}
+.sub{color:var(--muted);margin:0 0 18px;max-width:65ch}
+.panel{background:var(--panel);border:1px solid var(--line);padding:20px}
+
+/* pyramid */
+.pyr-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:center}
+@media (max-width:700px){.pyr-wrap{grid-template-columns:1fr}}
+.pyr{display:flex;flex-direction:column;align-items:center;gap:6px}
+.pyr div{height:52px;display:flex;align-items:center;justify-content:center;font-family:var(--pixel);font-size:16px;color:var(--ink)}
+.p-at{width:34%;background:var(--gold);clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)}
+.p-on{width:62%;background:var(--magenta);clip-path:polygon(10% 0,90% 0,100% 100%,0 100%)}
+.p-in{width:90%;background:var(--cyan);clip-path:polygon(7% 0,93% 0,100% 100%,0 100%)}
+.pyr-key{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.pyr-key li{display:grid;grid-template-columns:3.2em 1fr;gap:10px;align-items:baseline}
+.pyr-key .k{font-family:var(--pixel);font-size:12px}
+.pyr-key p{margin:0}
+.pyr-key small{display:block;color:var(--muted);font-size:16px}
+
+.codex{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-top:16px}
+.card{background:var(--panel);border:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card h3{font-family:var(--pixel);font-size:22px;margin:0}
+.card .size{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:-6px}
+.card h4{font-family:var(--pixel);font-size:9px;color:var(--muted);margin:0 0 6px;letter-spacing:.06em}
+.card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3px}
+.card li{font-size:17px}
+.card li span{color:var(--muted);font-size:15px}
+.card li b{font-weight:700}
+
+.traps{margin-top:14px;background:var(--panel-2);border:1px solid var(--line);padding:16px 18px}
+.traps h3{font-family:var(--pixel);font-size:10px;color:var(--bad);margin:0 0 10px;letter-spacing:.06em}
+.traps ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+.traps s{color:var(--bad);text-decoration-thickness:2px}
+
+/* buttons */
+button{font-family:var(--pixel);font-size:10px;letter-spacing:.06em;cursor:pointer;padding:12px 16px;border:2px solid var(--cyan);background:transparent;color:var(--cyan)}
+button:hover{background:rgba(0,245,255,.1)}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button:disabled{opacity:.35;cursor:default}
+button.alt{border-color:var(--magenta);color:var(--magenta)}
+button.alt:hover{background:rgba(255,0,255,.1)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.msg{font-family:var(--display);font-size:14px;color:var(--gold)}
+
+.pb{font-size:16px;padding:16px 0;min-width:96px;flex:1 1 0}
+.pb.in{border-color:var(--cyan);color:var(--cyan)}
+.pb.on{border-color:var(--magenta);color:var(--magenta)}
+.pb.at{border-color:var(--gold);color:var(--gold)}
+.pb.on:hover{background:rgba(255,0,255,.1)} .pb.at:hover{background:rgba(255,215,0,.1)}
+
+/* sorter */
+.sorter{display:flex;flex-direction:column;gap:16px;align-items:stretch}
+.sort-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.count{font-family:var(--pixel);font-size:9px;color:var(--muted)}
+.type{font-family:var(--pixel);font-size:9px;color:var(--ink);background:var(--muted);padding:5px 8px}
+.word{font-family:var(--display);font-weight:700;font-size:clamp(28px,6vw,44px);text-align:center;padding-block:18px;letter-spacing:.02em;border:1px dashed var(--line);min-height:2.6em;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s}
+.word.ok{border-color:var(--ok);color:var(--ok)} .word.bad{border-color:var(--bad);color:var(--bad)}
+.choice{display:flex;gap:10px}
+.fb{min-height:1.6em;font-family:var(--display);font-size:16px;text-align:center}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:560px){.bins{grid-template-columns:1fr}}
+.bin{background:var(--panel);border:1px solid var(--line);padding:12px;min-width:0}
+.bin h4{font-family:var(--pixel);font-size:11px;margin:0 0 8px}
+.bin .chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-weight:600;font-size:15px;padding:2px 8px;border:1px solid var(--line)}
+.chip.miss{border-color:var(--bad);color:var(--bad)}
+.empty{color:var(--muted);font-size:15px}
+
+/* gap fill */
+.gaps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:g}
+.gaps li{display:grid;grid-template-columns:2.4em minmax(0,1fr);gap:8px;align-items:start;counter-increment:g;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.gaps li:last-child{border-bottom:none;padding-bottom:0}
+.gaps li::before{content:counter(g,decimal-leading-zero);font-family:var(--pixel);font-size:10px;color:var(--magenta);padding-top:6px}
+.gaps p{margin:0 0 8px;font-size:19px}
+.blank{display:inline-block;min-width:2.6em;border-bottom:2px solid var(--muted);text-align:center;font-weight:700}
+.mini{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mini button{font-size:10px;padding:8px 14px}
+.mini .in{border-color:var(--cyan);color:var(--cyan)} .mini .on{border-color:var(--magenta);color:var(--magenta)} .mini .at{border-color:var(--gold);color:var(--gold)}
+.mini button.picked-ok{background:var(--ok);border-color:var(--ok);color:var(--ink);opacity:1}
+.mini button.picked-bad{background:var(--bad);border-color:var(--bad);color:var(--ink);opacity:1}
+.mini button.show-ok{border-color:var(--ok);color:var(--ok);opacity:1}
+.why{font-size:15px;color:var(--muted)}
+
+/* spinner */
+.spin{min-height:4.5em;display:flex;align-items:center;font-family:var(--display);font-size:clamp(20px,2.8vw,26px);font-weight:500;line-height:1.4;border-left:3px solid var(--gold);padding:6px 0 6px 16px;text-wrap:balance}
+
+/* writing */
+.brief .task{border-left:3px solid var(--gold);padding:4px 0 4px 14px}
+.brief h3{font-family:var(--display);font-size:20px;margin:0 0 6px}
+.brief p{margin:0}
+.starters{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.starters span{font-size:16px;font-weight:600;border:1px solid var(--line);padding:3px 9px;color:var(--fg);background:var(--panel-2)}
+.writer{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;margin-top:16px}
+@media (max-width:760px){.writer{grid-template-columns:1fr}}
+label.stat{margin-bottom:8px}
+textarea{width:100%;min-height:300px;resize:vertical;background:var(--ink);color:var(--fg);border:1px solid var(--line);padding:14px;font-family:var(--body);font-size:19px;line-height:1.6}
+textarea:focus{outline:none;border-color:var(--cyan)}
+.tracker{background:var(--panel-2);border:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.tracker h4{font-family:var(--pixel);font-size:9px;color:var(--muted);margin:0;letter-spacing:.06em}
+.meter{font-family:var(--display);font-size:15px;display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.meter b.done{color:var(--ok)}
+.phrases{display:flex;flex-wrap:wrap;gap:5px}
+.phrases .chip{font-size:14px}
+.result{font-family:var(--display);font-size:15px;border-top:1px solid var(--line);padding-top:10px}
+
+details{margin-top:20px;background:var(--panel);border:1px solid var(--line)}
+summary{cursor:pointer;padding:14px 16px;font-family:var(--pixel);font-size:10px;color:var(--magenta);letter-spacing:.06em}
+.notes{padding:0 18px 18px;max-width:72ch}
+.notes p{margin:0 0 10px}
+.notes ul{padding-left:1.1em;margin:0 0 10px}
+.notes li{margin:0 0 6px}
+.notes h3{font-family:var(--display);margin:4px 0 10px}
+
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;align-items:center}
+footer .brand{font-size:11px}
+footer p{margin:0;color:var(--muted);font-size:15px}
+footer a{color:var(--cyan)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head><body>
+
+<div class="hud" role="banner">
+  <div class="hud-in">
+    <div class="brand">ENGLISH FOR <b>ALL</b> · RANK UP YOUR ENGLISH</div>
+    <div class="stats">
+      <div class="stat">XP <div class="xpbar" aria-hidden="true"><i id="xpfill"></i></div><span id="xp">0</span></div>
+      <div class="stat">LIVES <span class="hearts" id="hearts" aria-label="3 lives">♥♥♥</span></div>
+      <div class="stat">RANK <span class="rank" id="rank">D</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="level">LEVEL A2 · GRAMMAR</div>
+    <h1>Preposition <span class="c-cyan" style="color:var(--cyan)">Pyramid</span></h1>
+    <p class="lede">In Spanish, one word often does the job: <b>en</b> julio, <b>en</b> la mesa, <b>en</b> casa. In English we need three: <b class="c-in">in</b> July, <b class="c-on">on</b> the table, <b class="c-at">at</b> home. Learn when to use each one for time and place.</p>
+    <nav class="missions" aria-label="Missions">
+      <a href="#rules">1 · The pyramid</a><a href="#sort">2 · Sort it</a><a href="#gaps">3 · Fill the gap</a><a href="#talk">4 · Talk</a><a href="#write">5 · Boss</a>
+    </nav>
+  </header>
+
+  <section id="rules">
+    <h2>MISSION 1 · THE PYRAMID</h2>
+    <p class="sub">Think of a pyramid. The bottom is big and general. The top is small and exact.</p>
+    <div class="panel pyr-wrap">
+      <div class="pyr" aria-hidden="true"><div class="p-at">AT</div><div class="p-on">ON</div><div class="p-in">IN</div></div>
+      <ul class="pyr-key">
+        <li><span class="k c-at">AT</span><p>An exact point<small>at 7 o'clock · at the door · at home</small></p></li>
+        <li><span class="k c-on">ON</span><p>A day or a surface<small>on Monday · on the table · on the bus</small></p></li>
+        <li><span class="k c-in">IN</span><p>A big time or an inside space<small>in July · in 2026 · in Argentina · in the box</small></p></li>
+      </ul>
+    </div>
+
+    <div class="codex">
+      <article class="card">
+        <h3 class="c-in">IN</h3><div class="size">Big · general · inside</div>
+        <div><h4>TIME</h4><ul>
+          <li><b class="c-in">in</b> July <span>· months</span></li>
+          <li><b class="c-in">in</b> 2026 <span>· years</span></li>
+          <li><b class="c-in">in</b> summer <span>· seasons</span></li>
+          <li><b class="c-in">in</b> the morning <span>· parts of the day</span></li>
+        </ul></div>
+        <div><h4>PLACE</h4><ul>
+          <li><b class="c-in">in</b> Argentina <span>· countries</span></li>
+          <li><b class="c-in">in</b> Buenos Aires <span>· cities</span></li>
+          <li><b class="c-in">in</b> the kitchen <span>· rooms</span></li>
+          <li><b class="c-in">in</b> a box, <b class="c-in">in</b> a car <span>· inside things</span></li>
+        </ul></div>
+      </article>
+      <article class="card">
+        <h3 class="c-on">ON</h3><div class="size">Medium · days · surfaces</div>
+        <div><h4>TIME</h4><ul>
+          <li><b class="c-on">on</b> Monday <span>· days</span></li>
+          <li><b class="c-on">on</b> 9 July <span>· dates</span></li>
+          <li><b class="c-on">on</b> my birthday <span>· special days</span></li>
+          <li><b class="c-on">on</b> Friday night <span>· day + part of day</span></li>
+        </ul></div>
+        <div><h4>PLACE</h4><ul>
+          <li><b class="c-on">on</b> the table <span>· surfaces</span></li>
+          <li><b class="c-on">on</b> the wall <span>· surfaces</span></li>
+          <li><b class="c-on">on</b> Corrientes Avenue <span>· streets</span></li>
+          <li><b class="c-on">on</b> the bus, <b class="c-on">on</b> a plane <span>· transport</span></li>
+        </ul></div>
+      </article>
+      <article class="card">
+        <h3 class="c-at">AT</h3><div class="size">Small · exact · a point</div>
+        <div><h4>TIME</h4><ul>
+          <li><b class="c-at">at</b> 7 o'clock <span>· clock times</span></li>
+          <li><b class="c-at">at</b> lunchtime <span>· exact moments</span></li>
+          <li><b class="c-at">at</b> night <span>· fixed phrase</span></li>
+          <li><b class="c-at">at</b> Christmas <span>· holiday periods</span></li>
+        </ul></div>
+        <div><h4>PLACE</h4><ul>
+          <li><b class="c-at">at</b> home, <b class="c-at">at</b> work, <b class="c-at">at</b> school</li>
+          <li><b class="c-at">at</b> the door <span>· points</span></li>
+          <li><b class="c-at">at</b> the bus stop <span>· points</span></li>
+          <li><b class="c-at">at</b> 25 Main Street <span>· full addresses</span></li>
+        </ul></div>
+      </article>
+    </div>
+
+    <div class="traps">
+      <h3>⚠ WATCH OUT</h3>
+      <ul>
+        <li><b class="c-in">in</b> the morning, <b class="c-in">in</b> the evening, but <b class="c-at">at</b> night.</li>
+        <li>Day + part of the day uses <b class="c-on">on</b>: <b class="c-on">on</b> Monday morning, not <s>in Monday morning</s>.</li>
+        <li>No preposition with <i>this, next, last, every</i>: next Monday, every day, not <s>on next Monday</s>.</li>
+        <li>Car and taxi use <b class="c-in">in</b>; bus, train and plane use <b class="c-on">on</b>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="sort">
+    <h2>MISSION 2 · SORT IT</h2>
+    <p class="sub">A word appears. Is it IN, ON or AT? Every correct answer is worth 10 XP.</p>
+    <div class="panel sorter">
+      <div class="sort-top"><span class="count" id="sortCount">1 / 18</span><span class="type" id="sortType">TIME</span></div>
+      <div class="word" id="sortWord" aria-live="polite">July</div>
+      <div class="choice" id="sortBtns">
+        <button type="button" class="pb in" data-p="in">IN</button>
+        <button type="button" class="pb on" data-p="on">ON</button>
+        <button type="button" class="pb at" data-p="at">AT</button>
+      </div>
+      <div class="fb" id="sortFb" role="status"></div>
+      <div class="row" style="margin-top:0;justify-content:center"><button type="button" id="sortNext" hidden>NEXT ▸</button><button type="button" id="sortAgain" class="alt" hidden>PLAY AGAIN</button></div>
+    </div>
+    <div class="bins">
+      <div class="bin"><h4 class="c-in">IN</h4><div class="chips" id="bin-in"><span class="empty">Nothing yet</span></div></div>
+      <div class="bin"><h4 class="c-on">ON</h4><div class="chips" id="bin-on"><span class="empty">Nothing yet</span></div></div>
+      <div class="bin"><h4 class="c-at">AT</h4><div class="chips" id="bin-at"><span class="empty">Nothing yet</span></div></div>
+    </div>
+  </section>
+
+  <section id="gaps">
+    <h2>MISSION 3 · FILL THE GAP</h2>
+    <p class="sub">Choose the correct word. You have 3 lives. A wrong answer costs one life.</p>
+    <div class="panel">
+      <ol class="gaps" id="gapList"></ol>
+      <div class="row"><span class="msg" id="gapMsg" role="status"></span><button type="button" id="gapReset" class="alt">RESTART</button></div>
+    </div>
+  </section>
+
+  <section id="talk">
+    <h2>MISSION 4 · TALK ABOUT YOU</h2>
+    <p class="sub">Spin for a question. Answer with a full sentence: <i>“I get up <b class="c-at">at</b> 7 o'clock.”</i></p>
+    <div class="panel">
+      <div class="spin" id="spinQ" aria-live="polite">Press SPIN to get your first question.</div>
+      <div class="row"><button id="spinBtn" type="button">SPIN</button><span class="count" id="spinCount">0 / 10 ANSWERED</span></div>
+    </div>
+  </section>
+
+  <section id="write">
+    <h2>MISSION 5 · BOSS: MY PERFECT SATURDAY</h2>
+    <p class="sub">The boss level. Write about your perfect Saturday and watch the tracker.</p>
+    <div class="panel brief">
+      <div class="task">
+        <h3>Write 6 sentences about your perfect Saturday.</h3>
+        <p>Use <b class="c-in">in</b>, <b class="c-on">on</b> and <b class="c-at">at</b> at least 2 times each. Say <i>when</i> and <i>where</i> you do things.</p>
+        <div class="starters"><span>On Saturday, I get up at…</span><span>In the morning, I…</span><span>At one o'clock, I…</span><span>In the afternoon, I go to…</span><span>At night, I…</span></div>
+      </div>
+    </div>
+    <div class="writer">
+      <div style="min-width:0">
+        <label for="essay" class="stat">YOUR SENTENCES</label>
+        <textarea id="essay" placeholder="On Saturday, I get up at..."></textarea>
+        <div class="row">
+          <button id="copyBtn" type="button">COPY TEXT</button>
+          <button id="clearBtn" type="button" class="alt">CLEAR</button>
+          <span class="msg" id="copyMsg" role="status"></span>
+        </div>
+      </div>
+      <aside class="tracker" aria-label="Progress tracker">
+        <h4>LIVE TRACKER</h4>
+        <div class="meter"><span class="c-in">IN</span><b id="m-in">0 / 2</b></div>
+        <div class="meter"><span class="c-on">ON</span><b id="m-on">0 / 2</b></div>
+        <div class="meter"><span class="c-at">AT</span><b id="m-at">0 / 2</b></div>
+        <div class="meter"><span>Sentences</span><b id="m-s">0 / 6</b></div>
+        <h4>YOUR PHRASES</h4>
+        <div class="phrases" id="phrases"><span class="empty">They will appear here.</span></div>
+        <div class="result" id="result">Start writing to fill the tracker.</div>
+      </aside>
+    </div>
+
+    <details>
+      <summary>▸ TEACHER: SAMPLE ANSWER</summary>
+      <div class="notes">
+        <h3>My Perfect Saturday</h3>
+        <p><b class="c-on">On</b> Saturday, I get up <b class="c-at">at</b> nine o'clock. I have breakfast <b class="c-in">in</b> the kitchen. <b class="c-in">In</b> the morning, I play football <b class="c-in">in</b> the park with my friends. <b class="c-at">At</b> one o'clock, we have lunch <b class="c-at">at</b> my grandmother's house. <b class="c-in">In</b> the afternoon, I read a book <b class="c-on">on</b> the sofa. <b class="c-at">At</b> night, I watch a film <b class="c-at">at</b> home.</p>
+      </div>
+    </details>
+    <details>
+      <summary>▸ TEACHER NOTES</summary>
+      <div class="notes">
+        <p>About 45 minutes. Suggested timing: pyramid 10, sort it 8, fill the gap 10, talk 7, boss 10.</p>
+        <ul>
+          <li>Spanish speakers use <i>en</i> for all three, so expect: <i>“in Monday”</i>, <i>“in the bus”</i>, <i>“in home”</i>, <i>“at the morning”</i>, <i>“in the night”</i>.</li>
+          <li>Dates are tricky: <i>in</i> May but <i>on</i> 5 May. The day wins.</li>
+          <li><i>At the weekend</i> (UK) and <i>on the weekend</i> (US) are both correct. Accept either.</li>
+          <li>In the boss task the tracker only counts the words. Check each phrase in “Your phrases” with the student.</li>
+          <li>Next lesson: more prepositions of place (under, next to, between, behind, in front of).</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="brand">ENGLISH FOR <b>ALL</b></div>
+    <p>Rank Up Your English · @englishforall_dan · <a href="https://englishforall.taplink.site" target="_blank" rel="noopener">Book a class</a></p>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const state={sortXP:0,gapXP:0,spinXP:0,writeXP:0,lives:3};
+const MAX=180+120+50+60;
+
+function updateHUD(){
+  const xp=state.sortXP+state.gapXP+state.spinXP+state.writeXP, p=xp/MAX;
+  $("xp").textContent=xp;
+  $("xpfill").style.width=Math.min(100,p*100)+"%";
+  $("hearts").textContent="♥".repeat(state.lives)+"♡".repeat(3-state.lives);
+  $("hearts").setAttribute("aria-label",state.lives+" lives");
+  $("rank").textContent=p>=.9?"S":p>=.75?"A":p>=.55?"B":p>=.3?"C":"D";
+}
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---------- Mission 2: sorter ---------- */
+const ITEMS=[
+ {w:"July",a:"in",t:"TIME",why:"months"},
+ {w:"2026",a:"in",t:"TIME",why:"years"},
+ {w:"the morning",a:"in",t:"TIME",why:"parts of the day"},
+ {w:"summer",a:"in",t:"TIME",why:"seasons"},
+ {w:"Argentina",a:"in",t:"PLACE",why:"countries and cities"},
+ {w:"the kitchen",a:"in",t:"PLACE",why:"rooms"},
+ {w:"Monday",a:"on",t:"TIME",why:"days"},
+ {w:"my birthday",a:"on",t:"TIME",why:"special days"},
+ {w:"25 December",a:"on",t:"TIME",why:"dates"},
+ {w:"the table",a:"on",t:"PLACE",why:"surfaces"},
+ {w:"the bus",a:"on",t:"PLACE",why:"buses, trains and planes"},
+ {w:"the wall",a:"on",t:"PLACE",why:"surfaces"},
+ {w:"8 o'clock",a:"at",t:"TIME",why:"clock times"},
+ {w:"night",a:"at",t:"TIME",why:"“at night” is a fixed phrase"},
+ {w:"lunchtime",a:"at",t:"TIME",why:"exact moments"},
+ {w:"home",a:"at",t:"PLACE",why:"at home, at work, at school"},
+ {w:"the bus stop",a:"at",t:"PLACE",why:"exact points"},
+ {w:"work",a:"at",t:"PLACE",why:"at home, at work, at school"}
+];
+let deck=[],pos=0,sortRight=0,locked=false;
+const sortBtns=[...document.querySelectorAll("#sortBtns button")];
+
+function addToBin(item,ok){
+  const bin=$("bin-"+item.a);
+  const e=bin.querySelector(".empty"); if(e) e.remove();
+  const c=document.createElement("span");
+  c.className="chip"+(ok?"":" miss");
+  c.textContent=item.w;
+  bin.appendChild(c);
+}
+function showCard(){
+  const it=deck[pos];
+  $("sortWord").className="word";
+  $("sortWord").textContent=it.w;
+  $("sortType").textContent=it.t;
+  $("sortCount").textContent=(pos+1)+" / "+deck.length;
+  $("sortFb").textContent="";
+  $("sortNext").hidden=true;
+  sortBtns.forEach(b=>b.disabled=false);
+  locked=false;
+}
+function startSort(){
+  deck=shuffle(ITEMS);pos=0;sortRight=0;state.sortXP=0;
+  ["in","on","at"].forEach(p=>$("bin-"+p).innerHTML='<span class="empty">Nothing yet</span>');
+  $("sortAgain").hidden=true;
+  $("sortBtns").hidden=false;
+  showCard();updateHUD();
+}
+function nextCard(){
+  pos++;
+  if(pos>=deck.length){
+    $("sortWord").className="word ok";
+    $("sortWord").textContent="COMPLETE! "+sortRight+" / "+deck.length;
+    $("sortType").textContent="DONE";
+    $("sortFb").textContent=sortRight===deck.length?"Perfect sort! +180 XP":"Red words in the boxes below are the ones to review.";
+    $("sortBtns").hidden=true;
+    $("sortNext").hidden=true;
+    $("sortAgain").hidden=false;
+    return;
+  }
+  showCard();
+}
+sortBtns.forEach(b=>b.onclick=()=>{
+  if(locked) return; locked=true;
+  const it=deck[pos], ok=b.dataset.p===it.a;
+  sortBtns.forEach(x=>x.disabled=true);
+  $("sortWord").className="word "+(ok?"ok":"bad");
+  $("sortWord").textContent=it.a+" "+it.w;
+  if(ok){sortRight++;state.sortXP+=10;$("sortFb").innerHTML=`<span style="color:var(--ok)">✓ Correct!</span> <span class="c-${it.a}">${it.a.toUpperCase()}</span>: ${it.why}`;}
+  else{$("sortFb").innerHTML=`<span style="color:var(--bad)">✗ Not quite.</span> It's <span class="c-${it.a}">${it.a.toUpperCase()}</span>: ${it.why}`;}
+  addToBin(it,ok);updateHUD();
+  $("sortNext").hidden=false;$("sortNext").focus();
+});
+$("sortNext").onclick=nextCard;
+$("sortAgain").onclick=startSort;
+startSort();
+
+/* ---------- Mission 3: gap fill ---------- */
+const GAPS=[
+ {s:"I get up ___ 7 o'clock.",a:"at",why:"clock times"},
+ {s:"My birthday is ___ March.",a:"in",why:"months"},
+ {s:"We have English class ___ Tuesday.",a:"on",why:"days"},
+ {s:"My cat sleeps ___ the sofa.",a:"on",why:"surfaces"},
+ {s:"She lives ___ Córdoba.",a:"in",why:"cities"},
+ {s:"I'm waiting ___ the bus stop.",a:"at",why:"exact points"},
+ {s:"I usually read ___ the evening.",a:"in",why:"parts of the day"},
+ {s:"There's a picture ___ the wall.",a:"on",why:"surfaces"},
+ {s:"I never work ___ night.",a:"at",why:"“at night” is a fixed phrase"},
+ {s:"The keys are ___ my bag.",a:"in",why:"inside things"},
+ {s:"Let's meet ___ Saturday morning.",a:"on",why:"day + part of the day"},
+ {s:"He's ___ work until 6.",a:"at",why:"at home, at work, at school"}
+];
+let answered=0,gapRight=0,gameOver=false;
+function renderGaps(){
+  answered=0;gapRight=0;gameOver=false;state.gapXP=0;state.lives=3;
+  $("gapList").innerHTML=GAPS.map((g,i)=>{
+    const [a,b]=g.s.split("___");
+    return `<li><div><p>${a}<span class="blank" id="b${i}">&nbsp;</span>${b}</p><div class="mini" data-i="${i}"><button type="button" class="in" data-p="in">IN</button><button type="button" class="on" data-p="on">ON</button><button type="button" class="at" data-p="at">AT</button><span class="why" id="w${i}"></span></div></div></li>`;
+  }).join("");
+  document.querySelectorAll(".mini").forEach(m=>m.querySelectorAll("button").forEach(b=>b.onclick=()=>answerGap(m,b)));
+  $("gapMsg").textContent="0 / 12 answered";
+  updateHUD();
+}
+function answerGap(m,b){
+  if(gameOver) return;
+  const i=+m.dataset.i, g=GAPS[i], ok=b.dataset.p===g.a;
+  const btns=[...m.querySelectorAll("button")];
+  btns.forEach(x=>x.disabled=true);
+  b.classList.add(ok?"picked-ok":"picked-bad");
+  if(!ok) btns.find(x=>x.dataset.p===g.a).classList.add("show-ok");
+  const blank=$("b"+i);
+  blank.textContent=g.a; blank.className="blank c-"+g.a;
+  $("w"+i).textContent=(ok?"✓ ":"✗ ")+g.a.toUpperCase()+": "+g.why;
+  answered++;
+  if(ok){gapRight++;state.gapXP+=10;}
+  else{state.lives=Math.max(0,state.lives-1);}
+  if(state.lives===0&&answered<GAPS.length){
+    gameOver=true;
+    document.querySelectorAll(".mini button:not(:disabled)").forEach(x=>x.disabled=true);
+    $("gapMsg").textContent="Out of lives! Review the pyramid, then press RESTART.";
+  }else if(answered===GAPS.length){
+    $("gapMsg").textContent=gapRight===GAPS.length?"PERFECT CLEAR! +120 XP":`Mission complete: ${gapRight} / 12 correct.`;
+  }else{
+    $("gapMsg").textContent=answered+" / 12 answered";
+  }
+  updateHUD();
+}
+$("gapReset").onclick=renderGaps;
+renderGaps();
+
+/* ---------- Mission 4: spinner ---------- */
+const SPIN=[
+ "What time do you get up?",
+ "When is your birthday?",
+ "Where do you live?",
+ "What do you do on Sunday?",
+ "Where are you right now?",
+ "What do you do in the summer?",
+ "Where is your phone right now?",
+ "What do you do at night?",
+ "What time do you have dinner?",
+ "Where do you usually study English?"
+];
+let order=[],spun=0;
+$("spinBtn").onclick=()=>{
+  if(!order.length) order=shuffle(SPIN.map((_,i)=>i));
+  $("spinQ").textContent=SPIN[order.pop()];
+  spun=Math.min(10,spun+1);
+  state.spinXP=spun*5;
+  $("spinCount").textContent=spun+" / 10 ANSWERED";
+  updateHUD();
+};
+
+/* ---------- Mission 5: writing ---------- */
+const PREPS=["in","on","at"];
+function track(){
+  const t=$("essay").value;
+  const counts={in:0,on:0,at:0};
+  PREPS.forEach(p=>{counts[p]=(t.match(new RegExp("\\b"+p+"\\b","gi"))||[]).length;});
+  const sentences=t.split(/[.!?]+/).filter(s=>/[a-z]/i.test(s)).length;
+  PREPS.forEach(p=>{const el=$("m-"+p);el.textContent=Math.min(counts[p],99)+" / 2";el.className=counts[p]>=2?"done":"";});
+  $("m-s").textContent=sentences+" / 6";$("m-s").className=sentences>=6?"done":"";
+
+  const found=[...t.matchAll(/\b(in|on|at)\b((?:\s+[A-Za-zÀ-ÿ0-9'’]+){1,2})/gi)].slice(0,24);
+  $("phrases").innerHTML=found.length?found.map(m=>`<span class="chip c-${m[1].toLowerCase()}">${(m[1]+m[2]).replace(/</g,"&lt;")}</span>`).join(""):'<span class="empty">They will appear here.</span>';
+
+  const score=PREPS.reduce((s,p)=>s+Math.min(counts[p],2),0);
+  state.writeXP=score*8+(sentences>=6?12:0);
+  const need=[];
+  PREPS.forEach(p=>{if(counts[p]<2)need.push(`${2-counts[p]} more ${p.toUpperCase()}`)});
+  if(sentences<6)need.push(`${6-sentences} more sentence${6-sentences===1?"":"s"}`);
+  $("result").innerHTML=!t.trim()?"Start writing to fill the tracker.":need.length?"Still need: "+need.join(", ")+".":'<span style="color:var(--ok)">BOSS DEFEATED!</span> Now check your phrases with your teacher.';
+  updateHUD();
+  try{localStorage.setItem("pp-essay",t)}catch(e){}
+}
+$("essay").addEventListener("input",track);
+try{const s=localStorage.getItem("pp-essay");if(s)$("essay").value=s}catch(e){}
+track();
+$("copyBtn").onclick=()=>{const t=$("essay");
+  navigator.clipboard.writeText(t.value).then(()=>{$("copyMsg").textContent="Copied."}).catch(()=>{t.select();$("copyMsg").textContent="Text selected. Press Ctrl+C."});};
+$("clearBtn").onclick=()=>{$("essay").value="";track();$("copyMsg").textContent="Cleared.";};
+updateHUD();
+</script>
+</body></html>
