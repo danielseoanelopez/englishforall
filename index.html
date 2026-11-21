@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="nozoom.js?v=1"></script>
 <link rel="icon" href="icon-rankup.png">
 <link rel="apple-touch-icon" href="icon-rankup.png">
 <title>English for All &middot; Test de nivel de ingl&eacute;s (CEFR)</title>
@@ -118,17 +119,7 @@
     margin-bottom: 10px;
     letter-spacing: 2px;
   }
-  .brand .logo {
-    height: 130px;
-    max-width: 88%;
-    object-fit: contain;
-    background: #000;
-    padding: 10px 18px;
-    border: 2px solid var(--cyan);
-    border-radius: 16px;
-    box-shadow: 0 0 16px #00e5ff55, inset 0 0 12px #00e5ff22;
-    filter: brightness(1.15) saturate(1.2);
-  }
+  .brand .logo { display: block; width: min(100%, 640px); height: auto; margin: 0 auto; background: #080b0a; padding: 4px; border: 2px solid var(--cyan); border-radius: 18px; box-shadow: 0 0 22px #00e5ff55, inset 0 0 12px #00e5ff22; filter: brightness(1.12) saturate(1.15); }
   .brand .name {
     font-family: "Press Start 2P", monospace;
     font-size: 0.85rem;
@@ -519,7 +510,6 @@
   @media (min-width: 860px) {
     body { font-size: 18px; }
     .container { max-width: 1000px; }
-    .brand .logo { height: 150px; }
     header h1 { font-size: 2.2rem; }
     header .sub { font-size: 1.05rem; }
     .card { padding: 26px 32px; }
@@ -546,7 +536,7 @@
 <div class="container">
 
   <div class="brand" data-aos="fade-up">
-    <img class="logo" src="logo.png" alt="English for All — Rank Up">
+    <img class="logo" src="logo-big.webp" width="900" height="593" alt="English for All — Rank Up">
   </div>
 
   <header data-aos="fade-up" data-aos-delay="80">
