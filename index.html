@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <script src="nozoom.js?v=1"></script>
 <script>
-/* One-time fresh start, shared with the Rank Up app (same site = same saved data). Keep FRESH_START equal to
-   englishforall-campaign/assets/progress.js. Keeps sound settings and teacher mode. */
+/* One-time fresh start, the same date as the Rank Up app's (englishforall-campaign/assets/progress.js; the app now
+   lives at academyenglishforall.com, so each site clears its own saved data). Keeps sound settings and teacher mode. */
 (function(){ var FRESH_START = "2026-11-21";
   try { if (localStorage.getItem("efa_fresh") !== FRESH_START) {
     Object.keys(localStorage).forEach(function(k){
@@ -1070,7 +1070,7 @@ function submitTest() {
   document.getElementById("scoreText").textContent = `PUNTUACIÓN: ${score} / ${QUESTIONS.length} — ${result.name}`;
   document.getElementById("levelDesc").textContent = result.desc;
   document.getElementById("campaignCta").href =
-    "https://danielseoanelopez.github.io/englishforall-campaign/?level=" + result.level;
+    "https://academyenglishforall.com/?level=" + result.level;
 
   document.getElementById("desglose").innerHTML =
     `<div style="font-family:'Press Start 2P',monospace;font-size:0.68rem;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin-bottom:12px;letter-spacing:1px">★ TU DESGLOSE</div>` +
@@ -1149,5 +1149,26 @@ function submitTest() {
 </script>
 <!-- GoatCounter analytics — privacy-friendly, no cookies. Activate by claiming the "englishforall" code at goatcounter.com -->
 <script data-goatcounter="https://englishforall.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+/* Inside the Rank Up app: academyenglishforall.com/level-test.html shows this page in a frame, with ?app=1.
+   The app and this page live on different addresses, so the app cannot reach into the frame. Instead this page
+   makes room for the app's MAPA button itself, keeps its own pages inside the frame, and asks the app (by message)
+   to open the Academy map when EMPEZAR A PRACTICAR is tapped. */
+(function () {
+  var APP = "https://academyenglishforall.com";
+  if (window.parent === window || !/[?&]app=1(&|$)/.test(location.search)) return;
+  var st = document.createElement("style");
+  st.textContent = "body{padding-top:72px!important}.mute-btn{top:12px!important;right:12px!important}" +
+    "@media (min-width:768px){body{padding-top:78px!important}.mute-btn{top:20px!important;right:20px!important}}";
+  document.head.appendChild(st);
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a) return;
+    var m = /[?&]level=([ABC][12])\b/.exec(a.href);
+    if (a.id === "campaignCta" && m) { e.preventDefault(); parent.postMessage({ efa: "open-campaign", level: m[1] }, APP); return; }
+    try { if (new URL(a.href, document.baseURI).origin === location.origin && a.target === "_blank") a.removeAttribute("target"); } catch (err) {}
+  }, true);
+})();
+</script>
 </body>
 </html>
