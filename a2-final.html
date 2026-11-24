@@ -173,7 +173,7 @@
 </div>
 
 <script>
-const SOCIAL = { whatsapp:"https://wa.me/5491123709477", instagram:"https://www.instagram.com/englishforall_dan/", linkedin:"https://www.linkedin.com/in/danielseoanelopez/", discord:"daniel.s.20", taplink:"https://englishforall.taplink.site", superprof:"https://www.superprof.com.ar/ir/20148124-b7eaea" };
+const SOCIAL = { whatsapp:"https://wa.me/5491123709477", instagram:"https://www.instagram.com/dan_language_teacher/", linkedin:"https://www.linkedin.com/in/danielseoanelopez/", discord:"daniel.s.20", taplink:"https://englishforall.taplink.site", superprof:"https://www.superprof.com.ar/ir/20148124-b7eaea" };
 const FORM_ENDPOINT = "https://formspree.io/f/mbdewbrp";
 (function(){ document.querySelectorAll(".so-wa").forEach(a=>a.href=SOCIAL.whatsapp); document.querySelectorAll(".so-ig").forEach(a=>a.href=SOCIAL.instagram); document.querySelectorAll(".so-li").forEach(a=>a.href=SOCIAL.linkedin); document.querySelectorAll(".so-dc").forEach(function(a){a.setAttribute("onclick","return copyDiscord(this)");a.title="Discord: "+SOCIAL.discord+" (clic para copiar)";}); document.querySelectorAll(".so-tap").forEach(a=>a.href=SOCIAL.taplink); document.querySelectorAll(".so-sp").forEach(a=>a.href=SOCIAL.superprof); })();
 function copyDiscord(el){var r=el.innerHTML;var done=function(){el.innerHTML='<i class="fa-solid fa-check"></i>'+(el.classList.contains("btn")?" ¡COPIADO!":"");setTimeout(function(){el.innerHTML=r;},1500);};try{navigator.clipboard.writeText(SOCIAL.discord).then(done,done);}catch(e){done();}return false;}
