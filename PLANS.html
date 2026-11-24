@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="icon-rankup.png">
 <title>English for All &middot; Planes y precios</title>
 <meta property="og:title" content="English for All — Planes y precios">
-<meta property="og:description" content="Elige tu Rank Up. Novice $40 · Advanced $75 · Mastery $160.">
+<meta property="og:description" content="Elige tu Rank Up: clases en vivo + Academia Virtual, de A1 a C2.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielseoanelopez.github.io/englishforall/PLANS.html">
 <meta property="og:image" content="https://danielseoanelopez.github.io/englishforall/logo.png">
@@ -117,6 +117,14 @@
   footer .b em { font-style: normal; color: var(--cyan); }
   footer .sep { color: var(--gold); text-shadow: 0 0 8px #ffc83d88; margin: 0 8px; }
   @media (min-width: 860px) { body { font-size: 18px; } .brand .logo { height: 150px; } header h1 { font-size: 2.2rem; } }
+  .cur-switch { display: flex; justify-content: center; margin: 0 0 26px; }
+  .cur-switch > span { display: inline-flex; gap: 4px; padding: 4px; border: 2px solid #2b2a5e; border-radius: 999px; background: rgba(12,12,32,.85); }
+  .cur-switch button { font-family: "Share Tech Mono", monospace; font-size: 14px; letter-spacing: 1.5px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; color: #c9c4f0; cursor: pointer; }
+  .cur-switch button[aria-pressed="true"] { background: #00e5ff; color: #05050e; box-shadow: 0 0 14px rgba(0,229,255,.45); }
+  .cur-switch button:focus-visible { outline: 2px solid #ffc83d; outline-offset: 2px; }
+  .price { container-type: inline-size; }
+  .price .amt { font-size: 1.6rem; font-size: min(1.9rem, 11.6cqw); white-space: nowrap; }
+  .price .amt small { font-size: .5em; margin-right: 2px; }
 </style>
 </head>
 <body>
@@ -132,6 +140,8 @@
   </header>
 
   <div data-aos="fade-up" data-aos-delay="120" style="max-width:760px;margin:0 auto 22px;text-align:center;background:rgba(255,200,61,0.07);border:1px solid var(--gold);border-radius:12px;padding:11px 16px;box-shadow:0 0 10px #ffc83d22;font-size:0.85rem;letter-spacing:0.5px;color:var(--text)"><b style="color:var(--gold)">+2.500</b> clases dictadas &middot; <b style="color:var(--gold)">+100</b> reseñas &middot; <b style="color:var(--gold)">+10 años</b> enseñando</div>
+
+  <div class="cur-switch" role="group" aria-label="Moneda de los precios"><span><button type="button" data-cur="ars" aria-pressed="true">$ PESOS</button><button type="button" data-cur="usd" aria-pressed="false">US$ DÓLARES</button></span></div>
 
   <div class="grid">
 
@@ -149,8 +159,8 @@
         <li><i class="fa-solid fa-check"></i>Listening y lectura activa sobre situaciones reales.</li>
       </ul>
       <div class="spacer"></div>
-      <div class="price"><span class="amt">$40</span><span class="per"> /mes</span></div>
-      <a class="btn" href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Me%20interesa%20el%20Plan%20Inicio%20%28%2440%2Fmes%29.%20%C2%BFMe%20cuentas%20m%C3%A1s%3F">Elegir Inicio</a>
+      <div class="price"><span class="amt price-amt" data-ars="90.000" data-usd="75">$90.000</span><span class="per"> /mes</span></div>
+      <a class="btn" href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Me%20interesa%20el%20Plan%20Inicio.%20%C2%BFMe%20cuentas%20m%C3%A1s%3F">Elegir Inicio</a>
     </div>
 
     <div class="plan pop" data-aos="fade-up" data-aos-delay="120">
@@ -169,8 +179,8 @@
         <li><i class="fa-solid fa-check"></i>Workshop de gramática y writing para presentaciones y reuniones.</li>
       </ul>
       <div class="spacer"></div>
-      <div class="price"><span class="amt">$75</span><span class="per"> /mes</span></div>
-      <a class="btn" href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Me%20interesa%20el%20Plan%20Avanzado%20%28%2475%2Fmes%29.%20%C2%BFMe%20cuentas%20m%C3%A1s%3F">Elegir Avanzado</a>
+      <div class="price"><span class="amt price-amt" data-ars="160.000" data-usd="140">$160.000</span><span class="per"> /mes</span></div>
+      <a class="btn" href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Me%20interesa%20el%20Plan%20Avanzado.%20%C2%BFMe%20cuentas%20m%C3%A1s%3F">Elegir Avanzado</a>
     </div>
 
     <div class="plan m" data-aos="fade-up" data-aos-delay="240">
@@ -187,8 +197,8 @@
         <li><i class="fa-solid fa-check"></i>Acompañamiento en tus desafíos bilingües (canto, streaming, PC building).</li>
       </ul>
       <div class="spacer"></div>
-      <div class="price"><span class="amt">$160</span><span class="per"> /mes</span></div>
-      <a class="btn" href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Me%20interesa%20el%20Entrenamiento%20Intensivo%20%28%24160%2Fmes%29.%20%C2%BFMe%20cuentas%20m%C3%A1s%3F">Elegir Intensivo</a>
+      <div class="price"><span class="amt price-amt" data-ars="340.000" data-usd="300">$340.000</span><span class="per"> /mes</span></div>
+      <a class="btn" href="https://wa.me/5491123709477?text=Hey%2C%20%C2%A1Hola%20Dan%21%20Me%20interesa%20el%20Entrenamiento%20Intensivo.%20%C2%BFMe%20cuentas%20m%C3%A1s%3F">Elegir Intensivo</a>
     </div>
 
   </div>
@@ -238,6 +248,35 @@
     fill(document.getElementById("decoLeft"));
     fill(document.getElementById("decoRight"));
   })();
+</script>
+<script>
+/* Prices: pesos for visitors in Argentina (device time zone), dollars everywhere else; the switch remembers a manual choice. */
+(function () {
+  var KEY = "efa_cur";
+  function detect() {
+    try { var saved = localStorage.getItem(KEY); if (saved === "ars" || saved === "usd") return saved; } catch (e) {}
+    var tz = "";
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+    return /^America\/(Argentina\/|Buenos_Aires$|Catamarca$|Cordoba$|Jujuy$|Mendoza$|Rosario$|ComodRivadavia$)/.test(tz) ? "ars" : "usd";
+  }
+  function apply(cur) {
+    var usd = cur === "usd";
+    document.querySelectorAll(".price-amt").forEach(function (el) {
+      el.innerHTML = usd ? "<small>US</small>$" + el.getAttribute("data-usd") : "$" + el.getAttribute("data-ars");
+    });
+    document.querySelectorAll(".cur-switch button").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-cur") === cur));
+    });
+  }
+  apply(detect());
+  document.querySelectorAll(".cur-switch button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var cur = b.getAttribute("data-cur");
+      try { localStorage.setItem(KEY, cur); } catch (e) {}
+      apply(cur);
+    });
+  });
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
