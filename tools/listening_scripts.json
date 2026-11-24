@@ -1,0 +1,73 @@
+{
+  "note": "The five level-test listening clips (listen1-5.mp3): who says what, in which voice, at what speed. Re-record with tools/generate_listening.py. Recovered on 2026-11-23 by transcribing the July recordings, so the words match the questions.",
+  "clips": {
+    "listen1": {
+      "speed": 0.85,
+      "pause": 0.45,
+      "turn_pause": 0.5,
+      "lines": [
+        [
+          "Sarah",
+          "af_sarah",
+          "Hi, this is Sarah. Just a reminder: our meeting is on Monday at nine. Please bring your laptop. Thanks, bye!"
+        ]
+      ]
+    },
+    "listen2": {
+      "speed": 0.92,
+      "pause": 0.9,
+      "turn_pause": 0.9,
+      "lines": [
+        [
+          "Announcer",
+          "am_fenrir",
+          "Attention, passengers. The train to London is delayed by twenty minutes. It will now leave from platform four. We apologize for the delay."
+        ]
+      ]
+    },
+    "listen3": {
+      "speed": 1.0,
+      "pause": 0.45,
+      "turn_pause": 0.8,
+      "lines": [
+        [
+          "Colleague",
+          "af_kore",
+          "Hi, Tom! Quick question: is the quarterly report ready to go? The directors are asking about it."
+        ],
+        [
+          "Tom",
+          "am_puck",
+          "Almost there. I finished writing the whole thing on Tuesday, and my manager has already read it and signed off, so that part's done. The only thing holding it up is Marketing. I still need their final sales figures for the last section, and they keep telling me, tomorrow, tomorrow. Honestly, if the numbers arrive today, I'll send everything out first thing in the morning."
+        ]
+      ]
+    },
+    "listen4": {
+      "speed": 1.05,
+      "pause": 0.5,
+      "turn_pause": 0.5,
+      "lines": [
+        [
+          "Speaker",
+          "af_heart",
+          "People keep asking me whether I actually like working from home, and honestly, it depends on the day. On the plus side, I've got back the two hours I used to lose commuting, I can pick my kids up from school, and in the mornings, with nobody interrupting me, I get through twice as much work as I ever did at the office. But I won't pretend it's perfect. Video calls are exhausting, and because the laptop is always right there, it's really hard to switch off. Work just bleeds into the evenings if you let it. A couple of my colleagues actually gave up and went back to the office full-time, and fair enough, it works for them. Not for me, though. If my boss told me tomorrow that we all had to be back at our desks five days a week, I'd have my CV out by the weekend."
+        ]
+      ]
+    },
+    "listen5": {
+      "speed": 1.2,
+      "pause": 0.45,
+      "turn_pause": 0.45,
+      "lines": [
+        [
+          "Speaker",
+          "am_michael",
+          "So, the merger. Officially, nobody knew a thing until the announcement last Friday, and if you watch the press conference, both CEOs are doing their best surprised faces. But come on, the writing had been on the wall since the spring. The two of them were photographed having dinner together back in April. Then half their legal team started disappearing into closed-door meetings that never appeared on any calendar. The budget for new hires quietly dried up over the summer, and every big project got put on ice, pending review. Individually, sure, you could explain each of those away. Put them together, and the picture is pretty clear. So no, I don't buy for a second that this was a bolt from the blue. If anything, the only genuine surprise was the speed of it. Once the news went public, they pulled the trigger on the whole restructure within a week, and that timing caught even the skeptics off guard."
+        ]
+      ],
+      "fix_phonemes": {
+        "ɹˈaɪɾɪŋ": "ɹˈaɪtɪŋ"
+      }
+    }
+  }
+}

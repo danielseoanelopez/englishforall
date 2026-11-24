@@ -34,7 +34,7 @@
 <!-- recorder, no-paste writing box and "send to my teacher" (Google Drive): the same files the app's exams use -->
 <link rel="stylesheet" href="https://academyenglishforall.com/assets/icons.css?v=1">
 <link rel="stylesheet" href="https://academyenglishforall.com/assets/homework.css?v=2">
-<script defer src="https://academyenglishforall.com/assets/homework.js?v=6"></script>
+<script defer src="https://academyenglishforall.com/assets/homework.js?v=7"></script>
 <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 <style>
   :root {
@@ -566,7 +566,7 @@
 
   <header data-aos="fade-up" data-aos-delay="80">
     <h1>ENGLISH LEVEL TEST</h1>
-    <p class="sub">Descubre tu nivel CEFR (A1 – C2) &middot; 20 preguntas + writing &middot; ~15 min</p>
+    <p class="sub" id="headSub">Descubre tu nivel CEFR (A1 – C2) &middot; 20 preguntas + writing &middot; ~15 min</p>
   </header>
 
   <div data-aos="fade-up" data-aos-delay="120" style="max-width:760px;margin:0 auto 20px;text-align:center;background:rgba(255,200,61,0.07);border:1px solid var(--gold);border-radius:12px;padding:11px 16px;box-shadow:0 0 10px #ffc83d22;font-size:0.85rem;letter-spacing:0.5px;color:var(--text)"><b style="color:var(--gold)">+2.600</b> clases dictadas &middot; <b style="color:var(--gold)">+100</b> reseñas &middot; <b style="color:var(--gold)">+8 años</b> enseñando</div>
@@ -579,7 +579,7 @@
 
   <div id="intro" class="card student-info" data-aos="fade-up" data-aos-delay="160">
     <div class="panel-title">★ INSTRUCCIONES</div>
-    <p>Elige la mejor opción en cada pregunta. Si de verdad no la sabes, marca <b>«No lo sé»</b> — es mejor que adivinar, así tu nivel sale más preciso. Sin diccionario y sin traductor: ¡queremos tu nivel real! Las últimas <b>5 preguntas son de listening</b> (audio) — usa auriculares si puedes. 🎧 Al final escribes un <b>writing corto</b> y, si quieres, grabas <b>3 audios</b>: todo le llega a tu profe junto con tu resultado.</p>
+    <p>Elige la mejor opción en cada pregunta. Si de verdad no la sabes, marca <b>«No lo sé»</b> — es mejor que adivinar, así tu nivel sale más preciso. Sin diccionario y sin traductor: ¡queremos tu nivel real! Las últimas <b>5 preguntas son de listening</b> (audio) — usa auriculares si puedes. 🎧 <span id="introWriting">Al final escribes un <b>writing corto</b> y, si quieres, grabas <b>3 audios</b>: todo le llega a tu profe junto con tu resultado.</span></p>
     <div class="cefr-note"><b>¿Qué es el CEFR?</b> Es el Marco Común Europeo de Referencia: clasifica los idiomas en seis niveles, de A1 (principiante) a C2 (maestría). Las preguntas están en inglés; el resultado es una estimación y una breve entrevista oral lo confirma.</div>
     <label for="studentName">Tu nombre</label>
     <input type="text" id="studentName" placeholder="e.g. María García" oninput="saveProgress()">
@@ -601,8 +601,8 @@
     <div id="questions"></div>
 
     <div class="card" id="writingCard">
-      <div class="panel-title"><i class="fa-solid fa-pen"></i> WRITING · PARA TU PROFE</div>
-      <p>Escribe sobre ti <b>en inglés</b>: quién eres, a qué te dedicas y para qué quieres mejorar tu inglés. <b>Mínimo 30 palabras</b> — si puedes, escribe más. Frases cortas están bien; escribe como puedas, <b>sin traductor</b>: así tu profe confirma tu nivel.</p>
+      <div class="panel-title" id="writingTitle"><i class="fa-solid fa-pen"></i> WRITING · PARA TU PROFE</div>
+      <p>Escribe sobre ti <b>en inglés</b>: quién eres, a qué te dedicas y para qué quieres mejorar tu inglés. <b id="writingMin">Mínimo 30 palabras</b> — si puedes, escribe más. Frases cortas están bien; escribe como puedas, <b>sin traductor</b>: así tu profe confirma tu nivel.</p>
       <p class="es" style="margin-top:8px">Si tu nivel es alto, muéstralo: da ejemplos, opiniones y conecta tus ideas.</p>
       <textarea class="writing-area" id="writingBox" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Hi! My name is..." oninput="updateWordCount(); saveProgress()"></textarea>
       <div class="wc" id="wordCount">0 palabras (mínimo 30)</div>
@@ -634,7 +634,7 @@
     <div class="level-desc" id="levelDesc"></div>
     <div class="contact-box" style="border-color:var(--magenta);box-shadow:0 0 10px #ff3df022;text-align:left">
       <div class="panel-title" style="color:var(--magenta);text-shadow:0 0 8px var(--magenta)"><i class="fa-solid fa-paper-plane"></i> PARA TU PROFE</div>
-      <p>Tu resultado, tu <b>writing</b> y tus <b>audios</b> van directo a tu profe: con eso confirma tu nivel en la clase de prueba.</p>
+      <p id="sendNote">Tu resultado, tu <b>writing</b> y tus <b>audios</b> van directo a tu profe: con eso confirma tu nivel en la clase de prueba.</p>
       <div id="hwExamSend"></div>
     </div>
     <p class="rankup">RANK UP!</p>
@@ -977,9 +977,9 @@ function startTest() {
       ? `<div style="font-family:'Press Start 2P',monospace;font-size:0.72rem;color:var(--gold);text-align:center;margin:28px 0 4px;text-shadow:0 0 10px #ffc83d66;letter-spacing:1px;line-height:1.7">🎧 PARTE 2 · LISTENING<br><span style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--muted);text-shadow:none;letter-spacing:1px">Escucha cada audio (puedes repetir) y elige la respuesta.</span></div>`
       : "";
     // ?v=N busts the browser/GitHub-Pages cache when audio is re-generated under the
-    // same filename. BUMP THIS NUMBER whenever you re-run generate_listening.py.
+    // same filename. BUMP THIS NUMBER whenever you re-run tools/generate_listening.py (scripts: tools/listening_scripts.json).
     const player = item.audio
-      ? `<audio controls preload="none" src="${item.audio}?v=4" style="width:100%;height:42px;margin:2px 0 12px;filter:drop-shadow(0 0 6px #00e5ff55)"></audio>`
+      ? `<audio controls preload="none" src="${item.audio}?v=5" style="width:100%;height:42px;margin:2px 0 12px;filter:drop-shadow(0 0 6px #00e5ff55)"></audio>`
       : "";
     return `${divider}
     <div class="card question ${i % 2 ? "alt" : ""}" id="q${i}">
@@ -1058,15 +1058,31 @@ function updateProgress() {
 
 // ===== Writing + speaking: word count, and the recorders (assets/homework.js, shared with the app) =====
 const MIN_WORDS = 30;
+// Inside the app (academyenglishforall.com/level-test.html frames this page with ?app=1) the writing is required.
+// Opened on its own (the Taplink link) it is optional: the 20 questions are enough for a result.
+const IN_APP = window.parent !== window && /[?&]app=1(&|$)/.test(location.search);
+const WRITING_REQUIRED = IN_APP;
 function wordCount() { const t = document.getElementById("writingBox").value.trim(); return t ? t.split(/\s+/).length : 0; }
 function updateWordCount() {
   const w = wordCount(), el = document.getElementById("wordCount");
-  el.textContent = `${w} palabras (mínimo ${MIN_WORDS})`; el.classList.toggle("ok", w >= MIN_WORDS);
+  el.textContent = WRITING_REQUIRED ? `${w} palabras (mínimo ${MIN_WORDS})` : `${w} palabras`;
+  el.classList.toggle("ok", w >= MIN_WORDS);
   if (w >= MIN_WORDS && answeredCount() === QUESTIONS.length) document.getElementById("warning").style.display = "none";
 }
+function setupWriting() {
+  if (WRITING_REQUIRED) return;
+  document.getElementById("headSub").innerHTML = "Descubre tu nivel CEFR (A1 – C2) &middot; 20 preguntas &middot; ~10 min";
+  document.getElementById("introWriting").innerHTML = "Al final, si quieres, escribes un <b>writing corto</b> y grabas <b>3 audios</b>: le llegan a tu profe junto con tu resultado.";
+  document.getElementById("writingTitle").innerHTML = '<i class="fa-solid fa-pen"></i> WRITING · PARA TU PROFE (opcional)';
+  document.getElementById("writingMin").textContent = "Unas 30 palabras está bien";
+  document.getElementById("warning").textContent = "⚠ Responde todas las preguntas antes de continuar.";
+  document.getElementById("sendNote").innerHTML = "Tu resultado (y tu <b>writing</b> y tus <b>audios</b>, si los hiciste) va directo a tu profe: con eso confirma tu nivel en la clase de prueba.";
+  updateWordCount();
+}
+setupWriting();
 document.addEventListener("DOMContentLoaded", function () { if (window.HW) HW.exam({ key: "level-test", maxSec: 90 }); });
 function submitTest() {
-  if (answeredCount() === QUESTIONS.length && wordCount() < MIN_WORDS) {
+  if (WRITING_REQUIRED && answeredCount() === QUESTIONS.length && wordCount() < MIN_WORDS) {
     document.getElementById("warning").style.display = "block";
     document.getElementById("writingCard").scrollIntoView({ behavior: "smooth", block: "center" });
     document.getElementById("writingBox").focus({ preventScroll: true });
@@ -1123,7 +1139,7 @@ function submitTest() {
     `<div style="font-family:'Press Start 2P',monospace;font-size:0.68rem;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin-bottom:12px;letter-spacing:1px">★ TU DESGLOSE</div>` +
     `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a4a6a"><span>📝 Gramática y vocabulario</span><span><b style="color:var(--gold)">${gC}/${gT}</b> &middot; <b style="color:var(--cyan)">${gLvl}</b></span></div>` +
     `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a4a6a"><span>🎧 Listening</span><span><b style="color:var(--gold)">${lC}/${lT}</b> &middot; <b style="color:var(--cyan)">${lLvl}</b></span></div>` +
-    `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a4a6a;color:var(--muted)"><span>✍️ Writing (${wordCount()} palabras)</span><span>⏳ lo evalúa tu profe</span></div>` +
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a4a6a;color:var(--muted)"><span>✍️ Writing${wordCount() ? ` (${wordCount()} palabras)` : ""}</span><span>${wordCount() ? "⏳ lo evalúa tu profe" : "sin writing"}</span></div>` +
     `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;color:var(--muted)"><span>🎤 Speaking y pronunciación</span><span>⏳ ${window.HW && HW.count() ? HW.count() + (HW.count() === 1 ? " audio" : " audios") + " · lo evalúa tu profe" : "en tu clase de prueba"}</span></div>`;
 
   // Pre-filled WhatsApp consultation message with the student's result
@@ -1155,7 +1171,7 @@ function submitTest() {
         score: `${score}/${QUESTIONS.length} · ${result.level} (${result.name})`, writing: writing, details: form },
       form);
   } else if (FORM_ENDPOINT) {
-    document.getElementById("hwExamSend").innerHTML = '<p class="es">Tu resultado y tu writing se enviaron a tu profe por email.</p>';
+    document.getElementById("hwExamSend").innerHTML = '<p class="es">' + (writing ? "Tu resultado y tu writing se enviaron" : "Tu resultado se envió") + ' a tu profe por email.</p>';
     fetch(FORM_ENDPOINT, {
       method: "POST",
       headers: { "Accept": "application/json", "Content-Type": "application/json" },
